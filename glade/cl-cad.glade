@@ -1327,7 +1327,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
-                                <property name="image">image21</property>
+                                <property name="use_stock">True</property>
                               </object>
                               <packing>
                                 <property name="left_attach">3</property>
@@ -1683,7 +1683,7 @@
   </object>
   <object class="GtkImage" id="image25">
     <property name="visible">True</property>
-    <property name="stock">gtk-zoom-100</property>
+    <property name="stock">gtk-go-back</property>
   </object>
   <object class="GtkImage" id="image26">
     <property name="visible">True</property>

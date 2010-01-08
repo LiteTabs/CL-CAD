@@ -1,8 +1,7 @@
 (defsystem :cl-cad
         :name :cl-cad
-        :author "Burdukov Denis <litetabs@gmail.com>"
         :version "0.1"
-        :maintainer "Burdukov Denis <litetabs@gmail.com>"
+	:author "Burdukov Denis <litetabs@gmail.com>"
         :licence "LLGPL"
         :serial t
         :components ((:file "cl-cad"))

@@ -17,6 +17,7 @@
           <object class="GtkNotebook" id="notebook4">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="tab_pos">left</property>
             <child>
               <object class="GtkIconView" id="iconview1">
                 <property name="visible">True</property>
