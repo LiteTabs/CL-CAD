@@ -5,4 +5,4 @@
         :licence "LLGPL"
         :serial t
         :components ((:file "cl-cad"))
-        :depends-on (:cl-gtk2-glib :cffi :cl-gtk2-gdk :cl-gtk2-gtk :iterate :cl-cairo2))
+        :depends-on (:cl-gtk2-glib :cffi :iterate :cl-gtk2-gdk :cl-gtk2-gtk :cl-cairo2 :cl-gtk2-cairo))
