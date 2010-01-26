@@ -161,30 +161,16 @@
   ;     ((equal (getf cd :title) "ellipse") (lambda () (too-long-form)))
    ;    ((equal (getf cd :title) "raster-image") (lambda () (too-long-form)))
        )))
-;(move-to 200 10)
-;	(line-to 100 10)
-;	(line-to 100 400)
-;	(line-to 700 400)
-;	(line-to 700 10)
-;	(line-to 300 10)
-;	(set-source-rgb 0.2 0.2 1)
-;	(set-line-width 4)
-;	(stroke)
-;	(rectangle 110 50 105 345)
-;	(set-source-rgb 1 1 1)
-;	(fill-path)
-;	(rectangle 420 15 150 50)
-;	(set-source-rgb 1 1 1)
-;	(fill-path)
-;	(rectangle 320 15 80 80)
-;	(set-source-rgb 1 1 1)
-;	(fill-path)
-;	(rectangle 500 300 195 95)
-;	(set-source-rgb 1 1 0.5)
-;	(fill-path)
-;	(rectangle 600 100 95 295)
-;	(set-source-rgb 1 1 0.5)
-;	(fill-path)
+
+(defun read-text-file (file-name)
+  (with-output-to-string (str)
+    (with-open-file (file file-name)
+      (loop
+         for line = (read-line file nil nil)
+         while line
+         do (fresh-line str)
+         do (write-string line str)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;PARAMETERS;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -209,7 +195,7 @@
 ;coming-soon-window
 (defun coming-soon-window ()
   (within-main-loop
-    (let ((window (make-instance 'gtk-window :title "Oops" :type :toplevel :window-position :center :default-width 170 :default-height 40))
+    (let ((window (make-instance 'gtk-window :title "Oops" :type :toplevel :window-position :center :default-width 170 :default-height 40 :destroy-with-parent t))
 	  (label (make-instance 'label :label "Coming Soon =)")))
       (gobject:g-signal-connect window "destroy" (lambda (widget) (declare (ignore widget)) (leave-gtk-main)))
       (container-add window label)
@@ -251,6 +237,7 @@
          :default-width 450
          :default-height 256
          :border-width 5
+	 :destroy-with-parent t
          (v-box
           (table
            :n-rows 8
@@ -290,7 +277,7 @@
 ;make-new-file window
 (defun make-new-file-window ()
   (within-main-loop
-    (let* ((window (make-instance 'gtk-window :title "Make new file" :type :toplevel :window-position :center :default-width 450 :default-height 260))
+    (let* ((window (make-instance 'gtk-window :title "Make new file" :type :toplevel :window-position :center :default-width 450 :default-height 260 :destroy-with-parent t))
 	   (v-box (make-instance 'v-box))
 	   (h-box (make-instance 'h-box))
 	   (notebook (make-instance 'notebook :enable-popup t))
@@ -323,7 +310,7 @@
 
 (defun draw-properties-window ()
   (within-main-loop
-   (let* ((window (make-instance 'gtk-window :title "Properties" :type :toplevel :window-position :center :default-width 600 :default-height 400))
+   (let* ((window (make-instance 'gtk-window :title "Properties" :type :toplevel :window-position :center :default-width 600 :default-height 400 :destroy-with-parent t))
 	 (v-box (make-instance 'v-box))
 	 (h-box (make-instance 'h-box))
 	 (notebook (make-instance 'notebook :enable-popup t :tab-pos :left))
@@ -414,7 +401,7 @@
 
 (defun layers-window ()
   (within-main-loop
-    (let* ((window (make-instance 'gtk-window :type :toplevel :title "Layers"))
+    (let* ((window (make-instance 'gtk-window :type :toplevel :title "Layers" :destroy-with-parent t))
            (model (make-instance 'array-list-store))
            (scroll (make-instance 'scrolled-window :hscrollbar-policy :automatic :vscrollbar-policy :automatic))
            (tv (make-instance 'tree-view :headers-visible t :width-request 100 :height-request 300 :rules-hint t))
@@ -507,7 +494,7 @@
 ;entry
 (defun entry-window ()
   (within-main-loop
-    (let ((window (make-instance 'gtk-window :type :toplevel :title "Entry" :window-position :center))
+    (let ((window (make-instance 'gtk-window :type :toplevel :title "Entry" :window-position :center :destroy-with-parent t))
 	  (vbox (make-instance 'v-box));
 	  (hbox (make-instance 'h-box))
 	  (entry (make-instance 'entry))
@@ -522,7 +509,7 @@
 
 (defun osnap-window ()
   (within-main-loop
-   (let ((window (make-instance 'gtk-window :type :toplevel :title "Osnap" :window-position :center :default-width 240 :default-height 320))
+   (let ((window (make-instance 'gtk-window :type :toplevel :title "Osnap" :window-position :center :default-width 240 :default-height 320 :destroy-with-parent t))
 	 (v-box (make-instance 'v-box))
 	 (h-box (make-instance 'h-box))
 	 (osnap-table (make-instance 'table :n-rows 10 :n-columns 2 :homogeneous nil))
@@ -642,12 +629,14 @@
 	 (term-vbox (make-instance 'v-box))
 	 (term-hbox (make-instance 'h-box))
 	 (tools-vbox (make-instance 'v-box))
-	 (term-text-view (make-instance 'text-view))
+	 (term-buffer (make-instance 'text-buffer))
+	 (term-text-view (make-instance 'text-view :buffer term-buffer))
 	 (term-new (make-instance 'button :image (make-instance 'image :stock "gtk-new")))
 	 (term-open (make-instance 'button :image (make-instance 'image :stock "gtk-open")))
 	 (term-save (make-instance 'button :image (make-instance 'image :stock "gtk-save")))
 	 (term-save-as (make-instance 'button :image (make-instance 'image :stock "gtk-save-as")))
 	 (term-eval (make-instance 'button :image (make-instance 'image :stock "gtk-execute")))
+	 (term-scrolled (make-instance 'scrolled-window :hscrollbar-policy :automatic :vscrollbar-policy :automatic))
          ;;;system
 	 (button-save (make-instance 'button :image (make-instance 'image :stock "gtk-save")))
 	 (button-save-as (make-instance 'button :image (make-instance 'image :stock "gtk-save-as")))
@@ -719,7 +708,9 @@
 	 (button-copy (make-instance 'button :image (make-instance 'image :file (namestring (merge-pathnames "graphics/construct/cons_copy.png" *src-location*)))))
 	 (button-fillet (make-instance 'button :image (make-instance 'image :file (namestring (merge-pathnames "graphics/construct/cons_fillet.png" *src-location*)))))
 	 (button-mirror (make-instance 'button :image (make-instance 'image :file (namestring (merge-pathnames "graphics/construct/cons_mirror.png" *src-location*)))))
-	 (button-offset (make-instance 'button :image (make-instance 'image :file (namestring (merge-pathnames "graphics/construct/cons_offset.png" *src-location*))))))
+	 (button-offset (make-instance 'button :image (make-instance 'image :file (namestring (merge-pathnames "graphics/construct/cons_offset.png" *src-location*)))))
+	 (full-window 0)
+	 (term-file-name nil))
 
      ;;;pack
      (container-add w v-box)
@@ -729,7 +720,8 @@
      (box-pack-start h-box draw-area :expand t)
      (box-pack-start v-box term-notebook)
      (box-pack-start term-vbox term-hbox :expand nil)
-     (box-pack-start term-vbox term-text-view :expand t)
+     (container-add term-vbox term-scrolled)
+     (container-add term-scrolled term-text-view)
      (box-pack-start term-hbox term-new :expand nil)
      (box-pack-start term-hbox term-open :expand nil)
      (box-pack-start term-hbox term-save :expand nil)
@@ -750,9 +742,6 @@
      (notebook-add-page term-notebook
 			(make-instance 'v-box)
 			(make-instance 'label :label "Palettes"))
-     (notebook-add-page term-notebook
-			(make-instance 'v-box)
-			(make-instance 'label :label "Layers"))
      ;system 
      (box-pack-start menu-hbox button-save :expand nil)
      (box-pack-start menu-hbox button-save-as :expand nil)
@@ -852,9 +841,8 @@
      (gobject:g-signal-connect button-system-properties "clicked" (lambda (w) (declare (ignore w)) (draw-properties-window)))
      (gobject:g-signal-connect button-layers "clicked" (lambda (w) (declare (ignore w)) (layers-window)))
      (gobject:g-signal-connect button-full "toggled" (lambda (b) (declare (ignore b))
-							     (gtk-window-fullscreen w)))
-     (gobject:g-signal-connect button-full "clicked" (lambda (b) (declare (ignore b))
-							     (gtk-window-unfullscreen w)))
+							     (if (evenp full-window) (gtk-window-fullscreen w) (gtk-window-unfullscreen w))
+							     (incf full-window)))
      (gobject:g-signal-connect button-osnap "clicked" (lambda (b) (declare (ignore b)) (osnap-window)))
      (gobject:g-signal-connect button-line "clicked" (lambda (widget) (declare (ignore widget)) (coming-soon-window)))
      (gobject:g-signal-connect button-ray "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
@@ -894,5 +882,43 @@
      (gobject:g-signal-connect button-horiz "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-leader "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-vert "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
+     (gobject:g-signal-connect term-new "clicked" (lambda (&rest args) (declare (ignore args)) 
+							  (setf term-file-name nil
+								(text-buffer-text (text-view-buffer term-text-view)) "")))
+     (gobject:g-signal-connect term-save "clicked" (lambda (&rest args) (declare (ignore args)) 
+							   (if term-file-name
+							       (progn
+								 (with-open-file (file term-file-name :direction :output :if-exists :supersede)
+								   (write-string (text-buffer-text (text-view-buffer term-text-view)) file))))))
+     (gobject:g-signal-connect term-save-as "clicked" (lambda (&rest args) (declare (ignore args)) 
+							      (let ((d (make-instance 'file-chooser-dialog :action :save :title "Save file")))
+								(when term-file-name (setf (file-chooser-filename d) term-file-name))
+								(dialog-add-button d "gtk-save" :accept)
+								(dialog-add-button d "gtk-cancel" :cancel)
+								(if (eq :accept (dialog-run d))
+								    (progn
+								      (setf term-file-name (file-chooser-filename d))
+								      (object-destroy d))
+								    (object-destroy d)))))
+     (gobject:g-signal-connect term-open "clicked" (lambda (&rest args) (declare (ignore args)) 
+							   (let ((d (make-instance 'file-chooser-dialog :action :open :title "Open file")))
+							     (when term-file-name (setf (file-chooser-filename d) term-file-name))
+							     (dialog-add-button d "gtk-open" :accept)
+							     (dialog-add-button d "gtk-cancel" :cancel)
+							     (when (eq :accept (dialog-run d))
+							       (setf term-file-name (file-chooser-filename d)
+								     (text-buffer-text (text-view-buffer term-text-view)) (read-text-file term-file-name)))
+							     (object-destroy d))))
+     (gobject:g-signal-connect term-eval "clicked" (lambda (&rest args) (declare (ignore args)) 
+							   (let ((buffer (text-view-buffer term-text-view)))
+							     (multiple-value-bind (i1 i2) (text-buffer-get-selection-bounds buffer)
+							       (when (and i1 i2)
+								 (with-gtk-message-error-handler
+								   (let* ((text (text-buffer-slice buffer i1 i2))
+									  (value (eval (read-from-string text)))
+									  (value-str (format nil "~A" value))
+									  (pos (max (text-iter-offset i1) (text-iter-offset i2))))
+								     (text-buffer-insert buffer " => " :position (text-buffer-get-iter-at-offset buffer pos))
+								     (incf pos (length " => "))
+								     (text-buffer-insert buffer value-str :position (text-buffer-get-iter-at-offset buffer pos)))))))))
      (widget-show w))))
-
