@@ -9,52 +9,52 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="32px"
-   height="32px"
+   width="16"
+   height="16"
    id="svg2840"
    version="1.1"
    inkscape:version="0.47pre4 r22446"
-   sodipodi:docname="cons_mirror.svg">
+   sodipodi:docname="cons_offset.svg">
   <defs
      id="defs2842">
     <marker
        inkscape:stockid="Arrow2Mend"
        orient="auto"
-       refY="0.0"
-       refX="0.0"
+       refY="0"
+       refX="0"
        id="Arrow2Mend"
-       style="overflow:visible;">
+       style="overflow:visible">
       <path
          id="path4549"
-         style="font-size:12.0;fill-rule:evenodd;stroke-width:0.62500000;stroke-linejoin:round;"
-         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
-         transform="scale(0.6) rotate(180) translate(0,0)" />
+         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)" />
     </marker>
     <marker
        inkscape:stockid="Arrow1Send"
        orient="auto"
-       refY="0.0"
-       refX="0.0"
+       refY="0"
+       refX="0"
        id="Arrow1Send"
-       style="overflow:visible;">
+       style="overflow:visible">
       <path
          id="path4537"
-         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
-         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none;"
-         transform="scale(0.2) rotate(180) translate(6,0)" />
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)" />
     </marker>
     <marker
        inkscape:stockid="Arrow1Lend"
        orient="auto"
-       refY="0.0"
-       refX="0.0"
+       refY="0"
+       refX="0"
        id="Arrow1Lend"
-       style="overflow:visible;">
+       style="overflow:visible">
       <path
          id="path4525"
-         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
-         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none;"
-         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
     </marker>
     <inkscape:perspective
        sodipodi:type="inkscape:persp3d"
@@ -302,9 +302,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.395604"
-     inkscape:cx="12.985659"
-     inkscape:cy="15.855413"
+     inkscape:zoom="44.791208"
+     inkscape:cx="14.353335"
+     inkscape:cy="8.3532854"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -319,7 +319,11 @@
      inkscape:snap-global="false">
     <inkscape:grid
        type="xygrid"
-       id="grid3891" />
+       id="grid3891"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
   </sodipodi:namedview>
   <metadata
      id="metadata2845">
@@ -329,21 +333,22 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      id="layer1"
      inkscape:label="Layer 1"
-     inkscape:groupmode="layer">
+     inkscape:groupmode="layer"
+     transform="translate(0,-16)">
     <path
-       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
-       d="m 13.395486,18.157998 -10.0466145,0 0,5.090284 25.0495585,0 0,-5.179587 -9.957311,0 0,-9.8680085 -5.090285,0 0.04465,9.9573115 z"
+       style="fill:none;stroke:#000000;stroke-width:0.55111355;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 6.6862397,24.949763 -5.2937814,0 0,2.93412 13.1991627,0 0,-2.985595 -5.2467268,0 0,-5.688075 -2.6821828,0 0.023527,5.73955 z"
        id="path7209" />
     <path
-       style="fill:none;stroke:#0000bf;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
-       d="m 11.430815,16.104023 -10.0912664,0 0,9.019628 29.1128564,0 0,-9.019628 -10.001963,0 0,-10.0019626 -8.930324,0 -0.0893,10.0019626 z"
+       style="fill:none;stroke:#0000bf;stroke-width:0.55111355px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+       d="m 5.6510114,23.765821 -5.31730946,0 0,5.199055 15.34020306,0 0,-5.199055 -5.270254,0 0,-5.765289 -4.7055839,0 -0.047052,5.765289 z"
        id="path7211" />
   </g>
 </svg>

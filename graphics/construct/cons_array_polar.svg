@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="32px"
-   height="32px"
+   width="16"
+   height="16"
    id="svg2840"
    version="1.1"
    inkscape:version="0.47pre4 r22446"
-   sodipodi:docname="Новый документ 4">
+   sodipodi:docname="cons_array_polar.svg">
   <defs
      id="defs2842">
     <inkscape:perspective
@@ -88,9 +88,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.197802"
-     inkscape:cx="16"
-     inkscape:cy="16"
+     inkscape:zoom="31.672167"
+     inkscape:cx="11.028172"
+     inkscape:cy="7.2608204"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -101,7 +101,16 @@
      inkscape:window-height="977"
      inkscape:window-x="0"
      inkscape:window-y="25"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     showguides="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2828"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
   <metadata
      id="metadata2845">
     <rdf:RDF>
@@ -117,62 +126,63 @@
   <g
      id="layer1"
      inkscape:label="Layer 1"
-     inkscape:groupmode="layer">
+     inkscape:groupmode="layer"
+     transform="translate(0,-16)">
     <rect
-       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:0.52843332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="rect2866"
-       width="5.0902848"
-       height="5.0009813"
-       x="3.4828265"
-       y="3.1550534" />
+       width="2.6735244"
+       height="2.658849"
+       x="1.4066317"
+       y="17.071367" />
     <rect
-       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:0.52843332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="rect2866-4"
-       width="5.0902848"
-       height="5.0009813"
-       x="24.424437"
-       y="3.0657501" />
+       width="2.6735244"
+       height="2.658849"
+       x="12.405606"
+       y="17.023886" />
     <rect
-       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:0.52843332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="rect2866-2"
-       width="5.0902848"
-       height="5.0009813"
-       x="25.674681"
-       y="13.51423" />
+       width="2.6735244"
+       height="2.658849"
+       x="13.062258"
+       y="22.578985" />
     <rect
-       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:0.52843332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="rect2866-42"
-       width="5.0902848"
-       height="5.0009813"
-       x="24.245829"
-       y="24.141315" />
+       width="2.6735244"
+       height="2.658849"
+       x="12.311794"
+       y="28.229036" />
     <rect
-       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:0.52843332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="rect2866-24"
-       width="5.0902848"
-       height="5.0009813"
-       x="12.993621"
-       y="25.748774" />
+       width="2.6735244"
+       height="2.658849"
+       x="6.4018998"
+       y="29.083666" />
     <rect
-       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:0.52843332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="rect2866-3"
-       width="5.0902848"
-       height="5.0009813"
-       x="3.0809615"
-       y="24.230618" />
+       width="2.6735244"
+       height="2.658849"
+       x="1.1955637"
+       y="28.276514" />
     <rect
-       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:0.52843332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="rect2866-6"
-       width="5.0902848"
-       height="5.0009813"
-       x="1.2948968"
-       y="13.603533" />
+       width="2.6735244"
+       height="2.658849"
+       x="0.25748518"
+       y="22.626463" />
     <rect
-       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:0.52843332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="rect2866-8"
-       width="5.0902848"
-       height="5.0009813"
-       x="13.350835"
-       y="1.6368984" />
+       width="2.6735244"
+       height="2.658849"
+       x="6.5895166"
+       y="16.264217" />
   </g>
 </svg>
