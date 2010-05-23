@@ -1,0 +1,35 @@
+(in-package :cl-cad)
+
+(defun get-point-coordinates ()
+  (if (<= (get-delta) *osnap-area-delta*)
+      ;получение координат от привязки
+      (get-snap-coordinates)
+      ;получение координат от курсора
+      (setf *x* x2
+	    *y* y2)))
+
+(defun get-snap-coordinates ()
+  ;не хватает проверки на дистанцию и сходки консов в списки
+  (if (equal *osnap-center* t) (dolist (cd *current-draw*) (cond ((equal (getf cd :title) "circle")
+							       (print (cons (getf cd :x1) (getf cd :y1))))
+							      ((equal (getf cd :title) "arc")
+							       (print (cons (getf cd :x1) (getf cd :y1))))
+							      ((equal (getf cd :title) "ellipse")
+							       (print (cons (getf cd :x1) (getf cd :y1)))))))
+  (if (equal *osnap-end* t) (dolist (cd *current-draw*) (cond ((equal (getf cd :title) "line")
+							       (print (cons (getf cd :x1) (getf cd :y1)))
+							       (print (cons (getf cd :x2) (getf cd :y2)))))))
+  (if (equal *osnap-insert* t) (dolist (cd *current-draw*) (cond ((equal (getf cd :title) "block")
+								  (print (cons (getf cd :x1) (getf cd :y1)))))))
+;  (if (equal *osnap-intersection* t) (lambda ()))
+  (if (equal *osnap-midpoint* t) (dolist (cd *current-draw*) (cond ((equal (getf cd :title) "line")
+								    (print (cons (/ (+ (getf cd :x1) (getf cd :x2)) 2) (/ (+ (getf cd :y1) (getf cd :y2)) 2)))))))
+;  (if (equal *osnap-nearest* t) (lambda ()))
+  (if (equal *osnap-point* t) (dolist (cd *current-draw*) (cond ((equal (getf cd :title) "point")
+								  (print (cons (getf cd :x1) (getf cd :y1))))))))
+ ; (if (equal *osnap-perpendicular* t) (lambda ()))
+ ; (if (equal *osnap-quadrant* t) (lambda ()))
+ ; (if (equal *osnap-tangent* t) (lambda ()))
+ ; (if (equal *osnap-track* t) (lambda ()))
+ ; (if (equal *osnap-grid* t) (lambda ()))
+ ; (if (equal *osnap-ortho* t) (lambda ())))
