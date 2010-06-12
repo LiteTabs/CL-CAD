@@ -2,7 +2,7 @@
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass cairo-w (drawing-area)
-    ((draw-fn :initform 'draw-space :accessor cairo-w-draw-fn))
+    ((draw-fn :initform 'draw-space1 :accessor cairo-w-draw-fn))
     (:metaclass gobject:gobject-class)))
 
 (defmethod initialize-instance :after ((w cairo-w) &rest initargs)
@@ -58,6 +58,24 @@
 ;	(fill-path)
 
 
+(defun menu-window ()
+  (within-main-loop
+   (let ((w (make-instance 'gtk-window :type :popup :destroy-with-parent t :window-position :mouse))
+	  (v-box (make-instance 'v-box))
+	  (menuitem-file (make-instance 'menu-item :label "File"))
+	 (menuitem-edit (make-instance 'menu-item :label "Edit"))
+	 (menuitem-view (make-instance 'menu-item :label "View"))
+	 (menuitem-about (make-instance 'menu-item :label "About"))
+	  (button (make-instance 'button :label "exit")))
+     (container-add w v-box)
+     (container-add v-box menuitem-file)
+     (container-add v-box menuitem-edit)
+     (container-add v-box menuitem-view)
+     (container-add v-box menuitem-about)
+     (container-add v-box button)
+     (gobject:g-signal-connect w "destroy" (lambda (b) (declare (ignore b)) (leave-gtk-main)))
+     (widget-show w))))
+
 (defun main-window ()
   (within-main-loop
    (let* ((w (make-instance 'gtk-window :title "CL-CAD" :type :toplevel :window-position :center :default-width 1024 :default-height 600))
@@ -66,14 +84,8 @@
 	 (menu-notebook (make-instance 'notebook :enable-popup t))
 	 (draw-area (make-instance 'cairo-w))
 	 (vpaned (make-instance 'v-paned))
-	 (statusbar (make-instance 'statusbar :has-resize-grip t))
 	 (toolbar (make-instance 'toolbar :show-arrow t :toolbar-style :icons :tooltips t))
-	 (menubar (make-instance 'menu-shell))
-	 (menuitem-file (make-instance 'menu-item :label "File"))
-	 (menuitem-edit (make-instance 'menu-item :label "Edit"))
-	 (menuitem-view (make-instance 'menu-item :label "View"))
-	 (menuitem-about (make-instance 'menu-item :label "About"))
-	  (icon (make-instance 'status-icon :file (namestring (merge-pathnames "graphics/icon.svg" *src-location*))))
+	 (icon (make-instance 'status-icon :file (namestring (merge-pathnames "graphics/icon.svg" *src-location*))))
 	 ;terminal
 	 (term-notebook (make-instance 'notebook :enable-popup t :tab-pos :left))
 	 (term-vbox (make-instance 'v-box))
@@ -164,14 +176,8 @@
      (set-status-icon-tooltip icon "Main CAD menu")
      ;;;pack
      (container-add w v-box)
-     (box-pack-start v-box menubar :expand nil)
-     (container-add menubar menuitem-file)
-     (container-add menubar menuitem-edit)
-     (container-add menubar menuitem-view)
-     (container-add menubar menuitem-about)
      (box-pack-start v-box toolbar :expand nil)
      (container-add v-box vpaned)
-     (box-pack-start v-box statusbar :expand nil)
      (container-add vpaned h-box)
      (box-pack-start h-box menu-notebook :expand nil)
      (box-pack-start h-box draw-area :expand t)
@@ -382,13 +388,14 @@
 								     (text-buffer-insert buffer value-str :position (text-buffer-get-iter-at-offset buffer pos)))))))))
      (gobject:connect-signal icon "activate" (lambda (i)
 					       (declare (ignore i)) 
-					       (coming-soon-window)))
+					       (menu-window)))
      (widget-show w)
      (setf (status-icon-screen icon) (gtk-window-screen w)))))
 
 (defun run ()
   (main-window)
-  (join-main-thread))
+  (join-gtk-main)
+  (quit))
 
 (defun draw-space1 (w h)
   (set-source-rgb 1 1 1)

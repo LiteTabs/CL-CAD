@@ -89,7 +89,7 @@
     (gtk:widget-hide dlg)))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun read-text-file (file-name)
   (with-output-to-string (str)
@@ -381,13 +381,12 @@
      (gobject:g-signal-connect button-ostrack "clicked" (lambda (a) (declare (ignore a)) (if (equal *osnap-track* t) (setf *osnap-track* nil) (setf *osnap-track* t))))
      (widget-show window))))
 
-(defun about-window (app)
+(defun about-window ()
   (let ((dlg (make-instance 'about-dialog
 			    :window-position :center-on-parent
-			    :transient-for (app-main-window app)
 			    :program-name "CL-CAD"
 			    :version "0.1"
-			    :copyright "Copyright 2009, Andrey Kutejko"
+			    :copyright "Copyright 2010, Burdukov Denis"
 			    :comments "Simple CAD program powered by Common-Lisp"
 			    :authors '("Burdukov Denis <litetabs@gmail.com>")
 			    :license "LGPL"
