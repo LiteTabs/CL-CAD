@@ -1,12 +1,21 @@
 (in-package :cl-cad)
 
-(defstruct config default-file)
+(defstruct config 
+  background-color
+  default-format
+  default-units
+  default-space
+  author
+  default-line-width
+  default-font
+  osnap-area-delta
+  )
 
 (defvar *config* nil)
 
 (defun config-path ()
-  (pathname (glib:build-filename
-	     (glib:get-user-config-dir)
+  (pathname (build-filename
+	     (get-user-config-dir)
 	     "cl-cad.conf")))
 
 (defun load-config ()

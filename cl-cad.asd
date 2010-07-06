@@ -12,7 +12,7 @@
   :licence "LGPL"
   :serial t
   :components ((:file "cl-cad.package")
-					; (:file "cl-cad.config")
+	       (:file "cl-cad.config")
 	       (:file "cl-cad.engine")
 	       (:file "cl-cad.parameters")
 	       (:file "cl-cad.parser")
@@ -20,9 +20,11 @@
 	       (:file "cl-cad.utils")
 	       (:file "cl-cad.main"))
   :depends-on (:cl-gtk2-glib 
-	       :cffi 
+	       :cffi
+	     ;  :cl-binary-location
+	       :trivial-garbage
 	       :iterate 
-	       :cl-gtk2-gdk 
+	    ;   :cl-gtk2-gdk 
 	       :cl-gtk2-gtk 
 	       :cl-cairo2 
 	       :cl-gtk2-cairo))

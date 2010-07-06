@@ -1,5 +1,18 @@
 (in-package :cl-cad)
 
+(defun about-window ()
+  (let ((dlg (make-instance 'about-dialog
+			    :window-position :center-on-parent
+			    :program-name "CL-CAD"
+			    :version "0.1"
+			    :copyright "Copyright 2010, Burdukov Denis"
+			    :comments "Simple CAD program powered by Common-Lisp"
+			    :authors '("Burdukov Denis <litetabs@gmail.com>")
+			    :license "LGPL"
+			    :website "http://cl-cad.blogspot.com")))
+    (gtk:dialog-run dlg)
+    (gtk:object-destroy dlg)))
+
 (defun ask (parent-window message)
   (let ((dlg (make-instance 'gtk:message-dialog
 			    :text message
@@ -88,7 +101,6 @@
       (eql (gtk:dialog-run dlg) :ok)
     (gtk:widget-hide dlg)))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun read-text-file (file-name)
@@ -103,9 +115,16 @@
 ;coming-soon-window
 (defun coming-soon-window ()
   (within-main-loop
-    (let ((window (make-instance 'gtk-window :title "Oops" :type :toplevel :window-position :center :default-width 170 :default-height 40 :destroy-with-parent t))
+    (let ((window (make-instance 'gtk-window 
+				 :title "Oops" 
+				 :type :toplevel 
+				 :window-position :center 
+				 :default-width 170 
+				 :default-height 40 
+				 :destroy-with-parent t))
 	  (label (make-instance 'label :label "Coming Soon =)")))
-      (gobject:g-signal-connect window "destroy" (lambda (widget) (declare (ignore widget)) (leave-gtk-main)))
+      (gobject:g-signal-connect window "destroy" (lambda (widget) 
+						   (declare (ignore widget)) (leave-gtk-main)))
       (container-add window label)
       (widget-show window))))
 
@@ -174,7 +193,13 @@
 ;make-new-file window
 (defun make-new-file-window ()
   (within-main-loop
-    (let* ((window (make-instance 'gtk-window :title "Make new file" :type :toplevel :window-position :center :default-width 450 :default-height 260 :destroy-with-parent t))
+    (let* ((window (make-instance 'gtk-window 
+				  :title "Make new file" 
+				  :type :toplevel 
+				  :window-position :center 
+				  :default-width 450 
+				  :default-height 260 
+				  :destroy-with-parent t))
 	   (v-box (make-instance 'v-box))
 	   (h-box (make-instance 'h-box))
 	   (notebook (make-instance 'notebook :enable-popup t))
@@ -205,10 +230,19 @@
 ;layers-window
 (defun layers-window ()
   (within-main-loop
-    (let* ((window (make-instance 'gtk-window :type :toplevel :title "Layers" :destroy-with-parent t))
+    (let* ((window (make-instance 'gtk-window 
+				  :type :toplevel 
+				  :title "Layers" 
+				  :destroy-with-parent t))
            (model (make-instance 'array-list-store))
-           (scroll (make-instance 'scrolled-window :hscrollbar-policy :automatic :vscrollbar-policy :automatic))
-           (tv (make-instance 'tree-view :headers-visible t :width-request 100 :height-request 300 :rules-hint t))
+           (scroll (make-instance 'scrolled-window 
+				  :hscrollbar-policy :automatic 
+				  :vscrollbar-policy :automatic))
+           (tv (make-instance 'tree-view 
+			      :headers-visible t 
+			      :width-request 100 
+			      :height-request 300 
+			      :rules-hint t))
            (h-box (make-instance 'h-box))
            (v-box (make-instance 'v-box))
            (layer-name-entry (make-instance 'entry))
@@ -218,18 +252,25 @@
 	   (printable-entry (make-instance 'entry))
 	   (view-entry (make-instance 'entry))
            (button (make-instance 'button :label "Add layer")))
-      (store-add-column model "gchararray" #'layer-layer-name)
-      (store-add-column model "gchararray" #'layer-line-type)
-      (store-add-column model "gchararray" #'layer-color-line)
-      (store-add-column model "gint" #'layer-weight)
-      (store-add-column model "gchararray" #'layer-printable)
-      (store-add-column model "gchararray" #'layer-view)
-      (store-add-item model (make-layer :layer-name "0" :line-type "continious" :color-line "black" :weight 1 :printable "yes" :view "yes"))
+      (store-add-column model "gchararray" :layer-name)
+      (store-add-column model "gchararray" :line-type)
+      (store-add-column model "gchararray" :color-line)
+      (store-add-column model "gint" :weight)
+      (store-add-column model "gchararray" :printable)
+      (store-add-column model "gchararray" :view)
+      (store-add-item model (add-layer 
+			     :layer-name "0" 
+			     :line-type "continious" 
+			     :color-line "black" 
+			     :weight 1 
+			     :printable "yes" 
+			     :view "yes"))
       (setf (tree-view-model tv) model (tree-view-tooltip-column tv) 0)
-      (gobject:g-signal-connect window "destroy" (lambda (w) (declare (ignore w)) (leave-gtk-main)))
+      (gobject:g-signal-connect window "destroy" (lambda (w) 
+						   (declare (ignore w)) (leave-gtk-main)))
       (gobject:g-signal-connect button "clicked" (lambda (b)
                                                    (declare (ignore b))
-                                                   (store-add-item model (make-layer :layer-name (entry-text layer-name-entry)
+                                                   (store-add-item model (add-layer :layer-name (entry-text layer-name-entry)
 										     :line-type (entry-text line-type-entry)
 										     :color-line (entry-text color-line-entry)
 										     :weight (or (parse-integer (entry-text weight-entry) 
@@ -298,8 +339,12 @@
 ;entry
 (defun entry-window ()
   (within-main-loop
-    (let ((window (make-instance 'gtk-window :type :toplevel :title "Entry" :window-position :center :destroy-with-parent t))
-	  (vbox (make-instance 'v-box));
+    (let ((window (make-instance 'gtk-window 
+				 :type :toplevel 
+				 :title "Entry" 
+				 :window-position :center 
+				 :destroy-with-parent t))
+	  (vbox (make-instance 'v-box))
 	  (hbox (make-instance 'h-box))
 	  (entry (make-instance 'entry))
 	  (button (make-instance 'button :label "OK")))
@@ -307,13 +352,23 @@
       (box-pack-start hbox entry :expand t)
       (box-pack-start hbox button :expand nil)
       (container-add window vbox)
-      (gobject:g-signal-connect window "destroy" (lambda (widget) (declare (ignore widget)) (leave-gtk-main)))
-      (gobject:g-signal-connect button "clicked" (lambda (widget) (declare (ignore widget)) (object-destroy window)))
+      (gobject:g-signal-connect window "destroy" 
+				(lambda (widget) 
+				  (declare (ignore widget)) (leave-gtk-main)))
+      (gobject:g-signal-connect button "clicked" 
+				(lambda (widget) 
+				  (declare (ignore widget)) (object-destroy window)))
       (widget-show window))))
 
 (defun osnap-window ()
   (within-main-loop
-   (let ((window (make-instance 'gtk-window :type :toplevel :title "Osnap" :window-position :center :default-width 240 :default-height 320 :destroy-with-parent t))
+   (let ((window (make-instance 'gtk-window 
+				:type :toplevel 
+				:title "Osnap" 
+				:window-position :center 
+				:default-width 240 
+				:default-height 320 
+				:destroy-with-parent t))
 	 (v-box (make-instance 'v-box))
 	 (h-box (make-instance 'h-box))
 	 (osnap-table (make-instance 'table :n-rows 10 :n-columns 2 :homogeneous nil))
@@ -381,15 +436,3 @@
      (gobject:g-signal-connect button-ostrack "clicked" (lambda (a) (declare (ignore a)) (if (equal *osnap-track* t) (setf *osnap-track* nil) (setf *osnap-track* t))))
      (widget-show window))))
 
-(defun about-window ()
-  (let ((dlg (make-instance 'about-dialog
-			    :window-position :center-on-parent
-			    :program-name "CL-CAD"
-			    :version "0.1"
-			    :copyright "Copyright 2010, Burdukov Denis"
-			    :comments "Simple CAD program powered by Common-Lisp"
-			    :authors '("Burdukov Denis <litetabs@gmail.com>")
-			    :license "LGPL"
-			    :website "http://cl-cad.blogspot.com")))
-    (gtk:dialog-run dlg)
-    (gtk:object-destroy dlg)))

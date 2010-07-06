@@ -5,21 +5,16 @@
     ((draw-fn :initform 'draw-space1 :accessor cairo-w-draw-fn))
     (:metaclass gobject:gobject-class)))
 
-(defmethod initialize-instance :after ((w cairo-w) &rest initargs)
-  (declare (ignore initargs))
-  (gobject:connect-signal w "configure-event" (lambda (widget event)
-                                                (declare (ignore event))
-                                                (widget-queue-draw widget)))
-  (gobject:connect-signal w "expose-event" (lambda (widget event)
-                                             (declare (ignore event))
-                                             (cc-expose widget)))
-  (gobject:connect-signal w "motion-notify-event" (lambda (widget event)
-                                                       (declare (ignore event))
-                                                       (setf x (event-motion-x event)
-                                                             y (event-motion-y event))
-                                                       (widget-queue-draw widget))))
+;(defmethod initialize-instance :after ((w drawing-area) &rest initargs)
+;  (declare (ignore initargs))
+;  (gobject:connect-signal draw-area "configure-event" (lambda (widget event)
+;                                                (declare (ignore event))
+;                                                (widget-queue-draw widget)))
+;  (gobject:connect-signal draw-area "expose-event" (lambda (widget event)
+;                                             (declare (ignore event))
+;                                             (cc-expose widget))))
 
-(defmethod (setf cairo-w-draw-fn) :after (new-value (w cairo-w))
+(defmethod (setf cairo-w-draw-fn) :after (new-value (w drawing-area))
   (declare (ignore new-value))
   (widget-queue-draw w))
 
@@ -29,7 +24,6 @@
       (with-context (ctx)
 	(funcall (cairo-w-draw-fn widget) w h)
         nil))))
-
 ;	(set-source-rgb 0 0 0)
 ;	(paint)
  ;       (move-to 200 10)
@@ -55,8 +49,18 @@
 ;	(fill-path)
 ;	(rectangle 600 100 95 295)
 ;	(set-source-rgb 1 1 0.5)
-;	(fill-path)
+;	(fill-path)))))
 
+;(defmacro with-cairo-drawin-area ((drawing-area) &body body)
+;  (cl-utilities:with-unique-names (c wc wd hc hd pixp)
+;    `(cl-cairo2::with-gtk-context (,c (pointer (widget-window ,drawing-area)))
+;       (with-slots ((,wc cl-cairo2:width)
+;                    (,hc cl-cairo2:height)
+;                    (,pixp cl-cairo2:pixel-based-p)) ,c
+;         (multiple-value-bind (,wd ,hd)
+;             (gdk::drawable-get-size (widget-window ,drawing-area))
+;           (setf ,wc ,wd ,hc ,hd ,pixp t)))
+;       (cl-cairo2:with-context (,c) ,@body))))
 
 (defun menu-window ()
   (within-main-loop
@@ -78,7 +82,7 @@
 
 (defun main-window ()
   (within-main-loop
-   (let* ((w (make-instance 'gtk-window :title "CL-CAD" :type :toplevel :window-position :center :default-width 1024 :default-height 600))
+   (let* ((w (make-instance 'gtk-window :title "CL-CAD" :type :toplevel :window-position :center :default-width 1024 :default-height 600 :app-paintable t)); t :border-width 3))
 	 (v-box (make-instance 'v-box))
 	 (h-box (make-instance 'h-box))
 	 (menu-notebook (make-instance 'notebook :enable-popup t))
@@ -280,7 +284,20 @@
      (gobject:g-signal-connect w "destroy" (lambda (b) (declare (ignore b)) 
 						   (setf (status-icon-visible icon) nil)
 						   (leave-gtk-main)))
-     (gobject:g-signal-connect w "delete-event" (lambda (widget event)
+     (gobject:g-signal-connect draw-area "motion-notify-event" (lambda (widget event)
+								 (declare (ignore widget))
+								 (setf x (event-motion-x event)
+								       y (event-motion-y event))
+								 (widget-queue-draw draw-area)))
+     (gobject:g-signal-connect draw-area "expose-event"
+			       (lambda (widget event)
+				 (declare (ignore widget event))
+				 (cc-expose draw-area)))
+     (gobject:g-signal-connect draw-area "configure-event"
+                        (lambda (widget event)
+                          (declare (ignore widget event))
+                          (widget-queue-draw draw-area)))
+  (gobject:g-signal-connect w "delete-event" (lambda (widget event)
 					  (declare (ignore widget event))
 					  (let ((dlg (make-instance 'message-dialog
 								    :text "Are you sure?"
@@ -335,15 +352,8 @@
      (gobject:g-signal-connect button-lengthen "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-move "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-rotate "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
-     (gobject:g-signal-connect button-scale "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
-     (gobject:g-signal-connect button-stretch "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-trim "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-align "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
-     (gobject:g-signal-connect button-angular "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
-     (gobject:g-signal-connect button-baseline "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
-     (gobject:g-signal-connect button-center "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
-     (gobject:g-signal-connect button-continue "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
-     (gobject:g-signal-connect button-diameter "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-horiz "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-leader "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-vert "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
@@ -386,10 +396,8 @@
 								     (text-buffer-insert buffer " => " :position (text-buffer-get-iter-at-offset buffer pos))
 								     (incf pos (length " => "))
 								     (text-buffer-insert buffer value-str :position (text-buffer-get-iter-at-offset buffer pos)))))))))
-     (gobject:connect-signal icon "activate" (lambda (i)
-					       (declare (ignore i)) 
-					       (menu-window)))
      (widget-show w)
+;     (push :pointer-motion-mask (gdk-window-events (widget-window draw-area)))
      (setf (status-icon-screen icon) (gtk-window-screen w)))))
 
 (defun run ()
@@ -404,3 +412,10 @@
   (set-font-size 50)
   (set-source-rgb 0 0 1)
   (show-text "CL-CAD v0.1"))
+
+;(defun test-gdk-expose (gdk-window)
+;  (let* ((gc (graphics-context-new gdk-window)))
+;    (setf (graphics-context-rgb-fg-color gc) (make-color :red 65535 :green 0 :blue 0))
+ ;   (multiple-value-bind (x y) (drawable-get-size gdk-window)
+  ;    (gdk:draw-line gdk-window gc 0 0 x y))))
+

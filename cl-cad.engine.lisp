@@ -3,10 +3,10 @@
 (defvar *current-draw* nil)
 
 (defun add-file-properties (file-name subject author keywords comments hyperlink created modified)
-  (push (list :title "file-properties" :file-name file-name :subject subject :author author :keywords keywords :comments comments :hyperlink hyperlink :created created :modified modified) *current-draw*))
+  (push (list :title :file-properties" :file-name file-name :subject subject :author author :keywords keywords :comments comments :hyperlink hyperlink :created created :modified modified) *current-draw*))
 
-(defun add-sheet-properties (format hpole vpole background-color metrics space)
-  (push (list :title "sheet-properties" :format format :hpole hpole :vpole vpole :background-color background-color :metrics metrics :space space) *current-draw*))
+;(defun add-sheet-properties (format hpole vpole background-color metrics space)
+;  (push (list :title :sheet-properties" :format format :hpole hpole :vpole vpole :background-color background-color :metrics metrics :space space) *current-draw*))
 
 (defun add-layer (layer-name line-type color-line weight printable view)
   (push (list :title :layer :layer-name layer-name :line-type line-type :color-line color-line :weight weight :printable printable :view view) *current-draw*))
