@@ -1,4 +1,4 @@
-#define PROGRAM "PassStorage.exe"
+#define PROGRAM "cl-cad.exe"
 
 #include <windows.h>
 

@@ -2,18 +2,18 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [Setup]
-AppName=PassStorage
-AppVerName=PassStorage 0.10.2.8
-AppPublisher=Andrey Kutejko
-AppPublisherURL=http://andy128k.github.com/PassStorage
-AppSupportURL=http://andy128k.github.com/PassStorage
-AppUpdatesURL=http://andy128k.github.com/PassStorage
-DefaultDirName={pf}\PassStorage
+AppName=cl-cad
+AppVerName=cl-cad 0.1
+AppPublisher=Burdukov Denis
+AppPublisherURL=http://litetabs.github.com/CL-CAD
+AppSupportURL=http://litetabs.github.com/CL-CAD
+AppUpdatesURL=http://litetabs.github.com/CL-CAD
+DefaultDirName={pf}\cl-cad
 DisableDirPage=yes
 DisableProgramGroupPage=yes
 DisableReadyPage=yes
-DefaultGroupName=PassStorage
-OutputBaseFilename=PassStorage-0.10.2.8
+DefaultGroupName=cl-cad
+OutputBaseFilename=cl-cad-0.1
 Compression=lzma
 SolidCompression=yes
 WizardImageFile=setup-bg.bmp
@@ -27,44 +27,44 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\PassStorage\runner.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\freetype6.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\intl.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libatk-1.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libcairo-2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libexpat-1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libfontconfig-1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libgailutil-18.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libgdk_pixbuf-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libgdk-win32-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libgio-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libglib-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libgmodule-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libgobject-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libgthread-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libgtk-win32-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libjpeg-7.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libpango-1.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libpangocairo-1.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libpangoft2-1.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libpangowin32-1.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libpng12-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libtiff-3.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\libtiffxx-3.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\PassStorage.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\runner.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\zlib1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PassStorage\etc\*"; DestDir: "{app}\etc"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\PassStorage\icons\*"; DestDir: "{app}\icons"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\PassStorage\lib\*"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\PassStorage\share\*"; DestDir: "{app}\share"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\cl-cad\runner.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\freetype6.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\intl.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libatk-1.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libcairo-2.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libexpat-1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libfontconfig-1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libgailutil-18.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libgdk_pixbuf-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libgdk-win32-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libgio-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libglib-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libgmodule-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libgobject-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libgthread-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libgtk-win32-2.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libjpeg-7.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libpango-1.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libpangocairo-1.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libpangoft2-1.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libpangowin32-1.0-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libpng12-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libtiff-3.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\libtiffxx-3.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\cl-cad.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\runner.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\zlib1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\cl-cad\etc\*"; DestDir: "{app}\etc"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\cl-cad\icons\*"; DestDir: "{app}\icons"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\cl-cad\lib\*"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\cl-cad\share\*"; DestDir: "{app}\share"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{userprograms}\PassStorage"; Filename: "{app}\runner.exe"; WorkingDir: "{app}"
-Name: "{commondesktop}\PassStorage"; Filename: "{app}\runner.exe"; Tasks: desktopicon; WorkingDir: "{app}"
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\PassStorage"; Filename: "{app}\runner.exe"; Tasks: quicklaunchicon; WorkingDir: "{app}"
+Name: "{userprograms}\cl-cad"; Filename: "{app}\runner.exe"; WorkingDir: "{app}"
+Name: "{commondesktop}\cl-cad"; Filename: "{app}\runner.exe"; Tasks: desktopicon; WorkingDir: "{app}"
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\cl-cad"; Filename: "{app}\runner.exe"; Tasks: quicklaunchicon; WorkingDir: "{app}"
 
 [Run]
-Filename: "{app}\runner.exe"; Description: "{cm:LaunchProgram,PassStorage}"; Flags: nowait postinstall skipifsilent; WorkingDir: "{app}"
+Filename: "{app}\runner.exe"; Description: "{cm:LaunchProgram,cl-cad}"; Flags: nowait postinstall skipifsilent; WorkingDir: "{app}"
 

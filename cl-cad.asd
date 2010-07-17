@@ -21,10 +21,7 @@
 	       (:file "cl-cad.main"))
   :depends-on (:cl-gtk2-glib 
 	       :cffi
-	     ;  :cl-binary-location
 	       :trivial-garbage
 	       :iterate 
-	    ;   :cl-gtk2-gdk 
 	       :cl-gtk2-gtk 
-	       :cl-cairo2 
 	       :cl-gtk2-cairo))

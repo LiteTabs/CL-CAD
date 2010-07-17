@@ -13,11 +13,11 @@ case `uname -m` in
 esac
 
 DATE=`date -R`
-VERSION=`date +0.%-y.%-m.%-d`
-
+#VERSION=`date +0.%-y.%-m.%-d`
+VERSION=`date +0.1`
 PREFIX=deb/cl-cad
 
-rm -rf deb
+#rm -rf deb
 mkdir -p $PREFIX/usr/bin
 cp cl-cad $PREFIX/usr/bin/
 cp -aR share $PREFIX/usr/

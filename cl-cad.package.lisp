@@ -1,6 +1,6 @@
 (in-package :common-lisp-user)
 
 (defpackage cl-cad
-  (:shadowing-import-from #:cl-cairo2 #:scale)
-  (:use :cl #:gtk #:cl-cairo2 #:cl-gtk2-cairo)
+  (:shadowing-import-from #:cairo #:scale #:rectangle #:pointer)
+  (:use #:cl #:gtk #:gdk #:gobject #:cairo #:cl-gtk2-cairo)
   (:export :main-window :run))
