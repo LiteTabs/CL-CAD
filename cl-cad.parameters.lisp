@@ -8,9 +8,13 @@
 (defparameter *default-line-width* 1)
 (defparameter *default-font-size* 12)
 (defvar *text-buffer-count*)
-(defparameter *week-day-names*
-  '("Monday" "Tuesday" "Wednesday"
-    "Fhursday" "Friday" "Saturday" "Sunday"))
+(defparameter *week-day-names* '("Monday" 
+				 "Tuesday"
+				 "Wednesday"
+				 "Fhursday" 
+				 "Friday" 
+				 "Saturday" 
+				 "Sunday"))
 (defvar *current-screen* nil)
 ;osnaps
 (defvar *x* nil)
@@ -105,8 +109,8 @@
      (gobject:g-signal-connect window "destroy" (lambda (w) (declare (ignore w)) (leave-gtk-main)))
      (gobject:g-signal-connect button-cancel "clicked" (lambda (b) (declare (ignore b)) (object-destroy window)))
      (gobject:g-signal-connect combo-box "changed" (lambda (c)
-                                              (declare (ignore c))
-                                              (format t "You clicked on row ~A~%" (combo-box-active combo-box))))
+						     (declare (ignore c))
+						     (format t "You clicked on row ~A~%" (combo-box-active combo-box))))
      (gobject:g-signal-connect button-drawing-area-color-selection "color-changed" (lambda (s) (declare (ignore s)) 
 											   (unless (color-selection-adjusting-p button-drawing-area-color-selection) 
 											     (format t "color: ~A~%" (color-selection-current-color button-drawing-area-color-selection)))))

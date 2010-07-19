@@ -1,12 +1,12 @@
 (in-package :cl-cad)
 
-(defun get-point-coordinates ()
-  (if (<= (get-delta) *osnap-area-delta*)
-      ;получение координат от привязки
-      (get-snap-coordinates)
-      ;получение координат от курсора
-      (setf *x* x2
-	    *y* y2)))
+;(defun get-point-coordinates ()
+;  (if (<= (get-delta) *osnap-area-delta*)
+;      ;получение координат от привязки
+;      (get-snap-coordinates)
+;      ;получение координат от курсора
+;      (setf *x* x2
+;	    *y* y2)))
 
 (defun get-snap-coordinates ()
   ;не хватает проверки на дистанцию и сходки консов в списки

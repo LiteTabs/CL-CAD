@@ -14,9 +14,10 @@
 (defvar *config* nil)
 
 (defun config-path ()
-  (pathname (build-filename
-	     (get-user-config-dir)
-	     "cl-cad.conf")))
+  (merge-pathnames #p".cl-cad/cl-cad.conf"
+		   (user-homedir-pathname))
+  (ensure-directories-exist (merge-pathnames #p".cl-cad/cl-cad.conf"
+                                             (user-homedir-pathname))))
 
 (defun load-config ()
   (with-open-stream (stream (open (config-path)

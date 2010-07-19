@@ -1,0 +1,4 @@
+Description of CL-CAD fileformat
+
+Copyright (c)2009 Burdukov Denis
+

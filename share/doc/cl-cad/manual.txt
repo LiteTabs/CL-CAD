@@ -1,0 +1,460 @@
+CL-CAD
+
+Burdukov Denis
+
+2009-08-27
+
+Introduction
+
+1.1 What is CL-CAD?
+
+CL-CAD is a CAD program.
+
+1.2 Who is Denis Burdukov
+
+Burdukov Denis is the author of CL-CAD.
+
+1.3 How to contact?
+
+To contact the author (Burdukov Denis) use the following email address
+litetabs@rambler.ru
+
+If you have any ideas, thoughts or just want to chat don't hesitate
+to send me a email. I will be more than happy to read it! 
+
+Basic Concepts of CL-CAD
+
+The full desktop of oCADis is made by 4 different types of window.
+First you have the menu window. This is the window you see when you
+start CL-CAD for the first time. It is also the main window. If you
+close this window, you will exit CL-CAD. In this window is the main
+menu.
+
+Then there are the coordinate window. This can be activated by selecting
+/View/Show Coordinates. It is used to read and continuely updates
+the coordinates of the mouse. It also display the current tool.
+
+Under that menu item there is a menuitem called Show Command. By selecting
+that one a command window will be opened. This is one of the more
+important things in CL-CAD. In this you be able to view what options
+you have for different commands. You can also type in coordinates,
+commands and other useful information in this window.
+
+The last window is activated by selecting /File/New. A window with
+a lot of things in it is shown. This is called the drawing window
+and it is in this the drawing you make is shown. The buttons and popupmenus
+from left to right:
+
+Save: This is a shortcut for the menuitem called Save. It is use to
+save the drawing quick and easy.
+
+Snap: When this button is activated the snap mode is turned on.
+
+Grid: When this button is activated the grid mode is turned on.
+
+Ortho: When this button is activated the ortho mode is turned on.
+
+Layer: This popmenu shows you the current layer. You can select the
+current layer by select another layer on the popmenu.
+
+Colour: In this popmenu you select the current colour for the object.
+The menuitem named 'By Layer' means that the objects drawn should
+use the same colour as the current layer. Item 'Userdefined' displays
+a colour selection dialog where you can specify a colour.
+
+Linetype: This is the current linetype the object will be using. The
+item 'By Layer' means that the objects should be using the linetype
+of the current layer.
+
+Linewidth: This is the current linewidth the object will be using.
+The item 'By Layer' means that the objects should be using the linewidth
+set by the current layer. To activate a new linewidth you need to
+unfocus the combobox. This is easiest done by pressing Tab.
+
+Coordinate System
+
+CL-CAD uses the Cartesian coordinate system for specifying points in
+a drawing. When you create a two-dimensional drawing, you can enter
+points for a geometry creation with either the mouse or the keyboard.
+
+The origo of a new drawing is at the top-left corner of the window.
+This can of course be changed by zoom or panning the drawing.
+
+CL-CAD uses no particulary unit , like mm or inch, when entering a
+coordinate. Instead the user decides what kind of unit he is drawing
+in. 1 unit can be 1 meter, 1 kilometer or 1 light year. It doesn't
+matter. Therefor you can say that the scale you are drawing in is
+always 1:1.
+
+3.1 Absolute coordinates
+
+To enter a coordinate with the keyboard, you speficy first the X value
+and then the Y value. The values are seperated by a comma. If you
+want to place a point at the coordinates X=100 and Y=100, you type
+"100,100".
+
+Another way to specify this point would be to read the coordinate window
+and move the cursor to the right position and press left button. This
+is, however, not recommended because it can be vary hard to find the
+right position.
+
+3.2 Relative coordinates
+
+Relative coordinates are used to locate ``to points'' in relation to
+the previous point rather than the origin. You enter relative coordinates
+in a manner similar to the way you enter absolute coordinates. When
+you enter relative coordinates, the @ must precede your entry. For
+example, if the last point specified was 6,4, then entering "@4,3"
+is equivalent to specifying the absolute coordinates 6+4 and 4+3,
+or "10,7".
+
+3.3 Polar relative coordinates
+
+A third variant is to use something that is called polar relative coordinates.
+This works similar to relative coordinates but instead of using cartesian
+system you use polar system. When you enter polar relative coordinates,
+the @ must precede your entry, as in relative coordinate, but instead
+of using a comma to separate the two X and Y you use a "<". The first
+number is the radius from the last point and the second number is
+the angle. For example, if the last point specified was 6,4, then
+entering "@25<90'' is equivalent to speifying the absolute coordinates
+6+25*cos(DEGtoRAD(90)) and 4+25*sin(DEGtoRAD(90)), or "6,29".
+
+View 
+
+Grid, Snap and Ortho
+
+To increase speed and efficienty when laying out the drawing, oCADis
+provides a variety of drawings aids: Grid, Snap and Ortho. These can
+be selected and changed through the Drawing Aids dialog box. This
+dialog can be found under /Assist/Drawing Aids. It is also possible
+to enter GRID, SNAP or ORTHO directly att the Command Prompt. Futhermore
+these settings can be turn on and off using the icons found in the
+drawing window.
+
+5.1 Grid
+
+This command turns on a pattern of dots on the drawing window. These
+dots are only for visual reference and are not considered part of
+the drawing. Using a grid does not ensure accurate point selection,
+but instead enables you to estimate distances quickly. For you to
+accurately pick a grid point, the grid must be used with SNAP.
+
+The distance between the grid dots is set by the snap distance. You
+are however allowed to set the spacing between dots. For example if
+the X spacing is 1 and the Y spacing is 2 the resulting grid pattern
+will have one dot per X snap spacing and one dot per two times the
+Y snap spacing.
+
+5.2 Snap
+
+When SNAP is invoked, the cursor moves only in specific increments.
+For example, if the snap distance is set to 10, you could easily draw
+a line that is 30 units longs. You do this by picking a point on-screen
+and moving the crosshair three snap distance, and then pick another
+point.
+
+It is possible to set different values for the horizontal and vertical
+snaping.
+
+The normal pattern for snap is horizontal rows and vertical columns.
+Sometimes it would be beneficial to align the snap and grid to an
+angle other than the horizontal and vertical. The base point is the
+pivot about which the snap is rotated. The angle for rotation may
+range from 0 to 90 or 0 to -90 degrees.
+
+5.3 Ortho
+
+With ortho mode, you can draw lines that are perpendicular or parallell
+to one another. The advantage of using the ortho mode when drawing
+rectangular shape is that all corners are guaranteed to be square.
+
+Object Snaps
+
+When you attempt to pick points on-screen, you may have difficulty
+locating an exact position. Typing the point coordinates is one method,
+but in most cases you do not have such complete information that you
+can type the point. Another way is using the snap function. A third
+way is to use something that is called object snap, or osnap, function.
+
+The term object snap refers to a function in which the cursor is forced
+to snap exactly to specific point or location of an existing object.
+
+CL-CAD has 10 different object snap modes. Each object snap can be
+abbreviated to its first three letters. These three letters are the
+only letters you need to enter to access to the corresponding object
+snap mode.
+
+6.1 ENDpoint
+
+This is used to snap to the endpoint of a line, arc, ellipical arc,
+spline or a polyline. Both the spline and the polyline must be opened.
+
+6.2 MIDpoint
+
+This mode finds the midpoint of a line, arc or ellipical arc. You do
+not need to pick anywhere near the midpoint of the arc or line to
+snap to the midpoint.
+
+6.3 CENter
+
+The center option enables you to snap to the center of an arc, ellipical
+arc, circle or ellipse. To select the center point, you must select
+the object and not the center of the object.
+
+6.4 NODe
+
+This option enables you to snap to points or the inserted nodes in
+a block.
+
+6.5 QUAdrant
+
+Using the quadrant mode, you can find the 0, 90, 180 and 270 degrees
+positions of a circle, arc, ellipical arc or ellipse.
+
+6.6 INTersection
+
+The intersection object snap mode snaps to the point where objects
+cross each other.
+
+6.7 INSertion
+
+This mode enables you to quickly find the insertion point of a text
+or a block.
+
+6.8 PERpendicular
+
+This is used to find a point that are perpendicular to the selected
+object.
+
+6.9 TANgent
+
+This is used to find a point on a object that forms a tangent between
+the object and another point.
+
+6.10 NEArest
+
+The nearest object snap mode snaps to a point on a object that is nearest
+the center of the cursor.
+
+Objects
+
+With CL-CAD it is possible to draw and modify 11 different types of
+objects. The following sections will describe the objects.
+
+7.1 Line
+
+This is a line that goes from one point to another. You begin by selecting
+a start point and after that a end point. CL-CAD will continue to
+ask for a end point until you press enter or press the right button
+of the mouse. Each line you create is in CL-CAD treated as a object
+of its own. You may instead of pressing enter och right button, select
+the command Close. CL-CAD will then add a line from the last end point
+to the start point of the first drawn line.
+
+7.2 Polyline
+
+Polyline is used to draw a continues set of lines and/or arcs.
+
+7.3 Guideline
+
+There are two types of guidelines. Since guidelines have infinite length
+they will not affect commands like Zoom All but you are able to use
+relevant object snaps (e.g. intersection).
+
+7.3.1 Ray line
+
+The first type of guideline is called ray. It is a infinite line with
+one termination point.
+
+7.3.2 Construction Line
+
+The second type is called construction lines. This is a line of infinite
+length that can be used to aid in constructing the drawing. 
+
+7.4 Spline
+
+7.5 Arc
+
+An arc is a partial circle. CL-CAD gives you 11 methods for drawing
+an arc.
+
+3 Points: Speficy 3 points that the arc goes through. The arc starts
+at the first point, goes through the second and ends in the third
+point.
+
+Start,Center,End: Speficy the start point, the center point and the
+end point of the arc.
+
+Start,Center,Angle: Speficy the start point and the center point. Angle
+is the angle formed between the two radius lines extending from the
+center point through the endpoint of the arc.
+
+Start,Center,Length: Speficy the start point and the center point.
+Length refers to the chord length.
+
+Start,End,Angle: Specify the start and end point of the arc. Angle
+refers to the angle the arc occupies.
+
+Start,End,Radius: Specify the start point, the end point and the radius
+of the arc.
+
+Start,End,Direction: Direction refers to the direction of rotation
+in degrees of the arc.
+
+Center,Start,End: This is a variation of the Start, Center, End-option.
+
+Center,Start,Angle: This is a variation of the Start, Center, Angle-option.
+
+Center,Start,Length: This is a variation of the Start, Center, Length-option.
+
+Continue: This is used when you wish to continue from the last drawn
+arc or line. The start point and the direction is taken from the endpoint
+and direction of the previous arc or line.
+
+7.6 Circle
+
+Circles are as much a part of a typical drawing as lines are. There
+are 6 different ways to draw a circle
+
+Center,Radius: First specify the center point of the circle and then
+the radius.
+
+Center,Diameter: First specify the center point of the circle and then
+the diameter.
+
+2 Points: Specify two points that define the diameter of circle.
+
+3 Points: Specify three points on the circumference of the circle.
+
+Tangent,Tangent,Radius: This is not currently supported by CL-CAD.
+
+Donut: Donut is a partial solid circle (it is actually a normal circle
+with a linewidth which correponse to the inner and outer diameter
+of the donut). You can specify the inner and outer diameter. The outer
+diameter must be greater than the inner diameter. If inner diameter
+is set to 0 a solid circle will be created.
+
+7.7 Ellipse
+
+An ellipse consists of a center point, major axis and a minor axis.
+The ellipse command provides several methods for creating an ellipse
+based of these three characteristics.
+
+7.8 Polygon
+
+With this command you can draw regular multisided polygons. A polygon
+is created as a closed polyline.
+
+7.9 Rectangle
+
+This command makes it easy to draw rectangles. To draw a rectangle,
+specify the first corner and then the opposite corner.
+
+The rectangle is not really a object of itself. It is translated to
+a closed polyline.
+
+7.10 Point
+
+7.11 Text
+
+At the moment CL-CAD only supports one kind of font and that is CL-CAD
+internal. In the future, other types of fonts will be added, like
+for example Type1.
+
+Selection
+
+Many of the editing commands requires you to select which objects to
+affect. Therefor a understanding of how the selection of objects in
+CL-CAD works is necassary to get the most out of CL-CAD.
+
+The first prompt you usually will see when you are using some kind
+of editing command is 'Select object(s):'. This means that CL-CAD
+is in selection mode. Now you are able to use the commands found in
+/Assist/Select that otherwise are not selectable.
+
+A object is selected if its colour is different from the colour you
+choosed for it. Normally this means that if a object has its XOR-colour,
+it is selected. For example, a yellow object would be drawn in a blue
+colour if it is selected and a red object would be drawn in a lightblue
+colour. 
+
+When you then execute the editing command, it affects only the highlighted
+objects.
+
+8.1 Point Mode
+
+The selection starts in a so called point mode. That means you select
+objects by move the cursor to the object and press the left button
+of the mouse. It is also possible to enter a coordinate. 
+
+CL-CAD will then tell you if it found a object on that position. Important
+is that if you for example want to select a circle you do not click
+inside the circle. Instead you click on the circumference of the circle.
+Likewise for polylines and splines. Point mode works with all kind
+of objects.
+
+8.2 Window mode
+
+If there is a lot of objects to select you better use the window mode.
+This can be activated by selecting the menuitem Window under /Assist/Select
+or by simple enter the command 'w'.
+
+This allows you to draw a window and every object that are completly
+within that window will be selected. This works different for different
+objects.
+
+Line,Arc,Ellipical arc: Both end points must be within the window.
+
+Circle,Ellipse: The center point must be with in the window. 
+
+Polyline: All nodepoints must be within the window. 
+
+Spline: The spline itself must be inside the window. 
+
+Text,Point: The insertation point must be inside the window. 
+
+Ray,Construction: Cannot be selected with this method.
+
+8.3 Crossing Mode
+
+The crossing window also allows you to draw a window. The difference
+is that a object must not be completly within the window to be selected.
+You can select this command from the menu or enter 'c'.
+
+Line,Arc,Ellipcal arc: One of the endpoints must be within the window. 
+
+Circle,Ellipse: The center point must be within the window.
+
+Polyline: At least one nodepoint must be inside the window.
+
+Spline: A part of the spline must be within the window.
+
+Text,Point: The insertation point must be inside the window.
+
+Ray: The termination point must be inside the window.
+
+Construction: Cannot be selected with this method.
+
+8.4 Select All And Invert
+
+To select all objects you may enter the command 'all' or select it
+from the menu.
+
+To invert all the objects you may enter the command 'invert' or select
+it from the menu.
+
+8.5 Remove Objects
+
+If you have selected the wrong object you can use the command 'Remove
+Object'. This will remove objects from the selection. All the normal
+select modes can be used.
+
+8.6 Done
+
+When you are finished selecting press the right mouse button or hit
+enter.
+
+Editing 
+
+Layers, Colours And Linestyles
