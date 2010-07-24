@@ -52,6 +52,6 @@
 (defun draw-objects (object)
   (draw-object (getf object :title) object))
 
-(defun screen-draw ()
+(defun elements-drawer ()
   (dolist (cd *current-draw*)
     (draw-objects cd)))

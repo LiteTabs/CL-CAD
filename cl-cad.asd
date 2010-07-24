@@ -24,4 +24,5 @@
 	       :trivial-garbage
 	       :iterate 
 	       :cl-gtk2-gtk 
-	       :cl-gtk2-cairo))
+	       :cl-gtk2-cairo
+	       :cl-cairo2))
