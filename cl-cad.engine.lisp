@@ -274,11 +274,6 @@
 	(with-open-file (in filename)
 	(with-standard-io-syntax
 		(setf *current-draw* (read in)))))
-
-(defun prompt-read (prompt)
-	(format *query-io* "~a: " prompt)
-	(force-output *query-io*)
-	(read-line *query-io*))
 	
 (defun select (selector-fn)
   (remove-if-not selector-fn *current-draw*))

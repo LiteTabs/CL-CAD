@@ -1,1 +1,13 @@
 Hello! It is jast CL-CAD.
+
+Development tree of CL-CAD can be cloned with using the mirror:
+git clone git://github.com/LiteTabs/CL-CAD.git
+
+To install CL-CAD, unpack the CL-CAD sources, and add them to asdf:*central-registry*:
+
+(push "/path/to/cl-cad/" asdf:*central-registry*)
+
+or create symlink:
+
+cd ~/.sbcl/systems      # or other directory in asdf:*central-registry*
+ln -s /path/to/cl-cad/cl-cad.asd

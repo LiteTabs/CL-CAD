@@ -214,6 +214,11 @@
 			  					 (setf *current-x* (gdk:event-motion-x event)
 								       *current-y* (gdk:event-motion-y event))
 								 (widget-queue-draw draw-area)))
+     (gobject:g-signal-connect draw-area "button-press-event" (lambda (widget event)
+								(declare (ignore widget))
+								(setf *x* *current-x*
+								      *y* *current-y*)
+								(widget-queue-draw draw-area)))
      (gobject:g-signal-connect draw-area "scroll-event" (lambda (object event)
 								 (declare (ignore object))
 								  (if (equal (gdk:event-scroll-direction event) :UP)
@@ -267,7 +272,14 @@
      (gobject:g-signal-connect button-ellipse-arc "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-pline "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-polygon "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
-     (gobject:g-signal-connect button-point "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
+     (gobject:g-signal-connect button-point "clicked" (lambda (w) 
+							(declare (ignore w))
+							(add-point "default"
+								   *x*
+								   *y*
+								   0
+								   1
+								   1)))
      (gobject:g-signal-connect button-rectangle "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-spline "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-text "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
@@ -290,7 +302,8 @@
      (gobject:g-signal-connect term-eval "clicked" (cb-term-eval term-text-view))
      (widget-show w)
      (push :pointer-motion-mask (gdk-window-events (widget-window draw-area)))
-     (push :scroll-mask (gdk-window-events (widget-window draw-area)))))
+     (push :scroll-mask (gdk-window-events (widget-window draw-area)))
+     (push :button-press-mask (gdk-window-events (widget-window draw-area)))))
   (save-config))
 
 (export 'main-window)
@@ -378,25 +391,13 @@
   (set-source-rgb 1 1 0.5)
   (fill-path))
 
-(defun test-window ()
-  (within-main-loop
-   (let ((w (make-instance 'gtk-window :title "CL-CAD" :type :toplevel :window-position :center :default-width 1024 :default-height 600 :app-paintable t))
-	 (draw-area (make-instance 'drawing-area)))
-     (container-add w draw-area)
-     (gobject:g-signal-connect w "destroy" (lambda (b) (declare (ignore b)) (leave-gtk-main)))
-     (gobject:g-signal-connect draw-area "expose-event" (lambda (widget event)
-							  (declare (ignore widget event))
-							  (cc-expose draw-area)))
-     (widget-show w))))
-
 (defun screen-drawer (w h)
   (draw-2d-space w h)
   (if (equal *osnap-grid* t)
       (draw-grid w h *grid-step*)
       nil)
-  (draw-space))
- ; (elements-drawer)
- ; (shadow-drawer))
+ ; (draw-space)
+  (parser))
 
 (defun draw-2d-space (w h)
   (set-source-rgb 0 0 0)
@@ -417,12 +418,19 @@
   (stroke))
 
 (defun draw-grid (w h step)
-  (loop for a from 0 to w by step 
-     do (loop for b from 0 to h by step 
-	   do (grid a b))))
+  (loop for a from 0 to h by step 
+     do (horiz-grid a w))
+  (loop for b from 0 to w by step
+     do (vert-grid b h)))
 
-(defun grid (x y)
-  (set-source-rgb 1 1 1)
+(defun horiz-grid (a w)
+  (set-source-rgb 0 1 1)
   (set-line-width 0.5)
-  (arc x y 0.5 0 360)
+  (move-to 0 a)
+  (line-to w a)
+  (stroke))
+
+(defun vert-grid (b h)
+  (move-to b 0)
+  (line-to b h)
   (stroke))
