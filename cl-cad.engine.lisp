@@ -265,12 +265,16 @@
 ;	    (show-clipped :initarg :show-clipped)
 ;	    (transparency :initarg :transparency)))
 
-(defun save-draw (filename)
-	(with-open-file (out filename :direction :output :if-exists :supersede)
+(defun save-data (filename)
+	(with-open-file (out filename 
+			     :direction 
+			     :output 
+			     :if-exists 
+			     :supersede)
 	(with-standard-io-syntax
 		(print *current-draw* out))))
 
-(defun open-draw (filename)
+(defun open-file (filename)
 	(with-open-file (in filename)
 	(with-standard-io-syntax
 		(setf *current-draw* (read in)))))

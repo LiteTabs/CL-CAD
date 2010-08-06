@@ -1,6 +1,7 @@
 (in-package :cl-cad)
 
 (defparameter *src-location* (asdf:component-pathname (asdf:find-system :cl-cad)))
+(defvar *scroll-units* 1)
 (defparameter *current-layer* "system")
 (defparameter *current-color* "black")
 (defparameter *current-line-type* "continious")

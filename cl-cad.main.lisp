@@ -1,6 +1,90 @@
 (in-package :cl-cad)
 
-(defvar *scroll-units* 1)
+(defstruct app
+  main-window
+  data
+  view
+  current-icon
+  current-title
+  current-description
+  current-view
+
+  filename
+  changed)
+
+(defun ensure-data-is-saved (app)
+  (if (app-changed app)
+      (case (ask-save (app-main-window app)
+                      "Save changes before closing? If you don't save, changes will be permanently lost.")
+        (:ok
+         (cb-save app)
+         t)
+        (:reject
+         t)
+        (:cancel
+         nil))
+      t))
+
+(defun e-close (app)
+  (if (ensure-data-is-saved app)
+      (progn
+        (gtk:gtk-main-quit)
+        nil)
+      t))
+
+
+(defun cb-open (app)
+  (when (ensure-data-is-saved app)
+    (let ((dlg (make-instance 'gtk:file-chooser-dialog
+                              :action :open
+                              :title "Open file"
+                              :window-position :center-on-parent
+                              :transient-for (app-main-window app))))
+
+      (gtk:dialog-add-button dlg "gtk-cancel" :cancel)
+      (gtk:dialog-add-button dlg "gtk-open" :ok)
+      (gtk:set-dialog-alternative-button-order dlg (list :ok :cancel))
+      (setf (gtk:dialog-default-response dlg) :ok)
+      (when (std-dialog-run dlg)
+        (open-file (gtk:file-chooser-filename dlg))))))
+
+(defun cb-save-as (app)
+  (let ((dlg (make-instance 'gtk:file-chooser-dialog
+                            :action :save
+                            :title "Save file"
+                            :window-position :center-on-parent
+                            :transient-for (app-main-window app))))
+    (gtk:dialog-add-button dlg "gtk-cancel" :cancel)
+    (gtk:dialog-add-button dlg "gtk-save" :ok)
+    (gtk:set-dialog-alternative-button-order dlg (list :ok :cancel))
+    (setf (gtk:dialog-default-response dlg) :ok)
+    (when (std-dialog-run dlg)
+      (setf (app-filename app) (gtk:file-chooser-filename dlg))
+      (save-data (gtk:file-chooser-filename dlg)))))
+
+(defun cb-save (app)
+  (if (app-filename app)
+      (save-data (app-filename app))
+      (cb-save-as app)))
+
+(defun cb-new (app)
+  (when (ensure-data-is-saved app)
+    (setf (app-changed app) nil)
+    (setf (app-filename app) nil)))
+
+(defun cb-about (app)
+  (let ((dlg (make-instance 'about-dialog
+			    :window-position :center-on-parent
+			    :transient-for (app-main-window app)
+			    :program-name "CL-CAD"
+			    :version "0.1"
+			    :copyright "Copyright 2010, Burdukov Denis"
+			    :comments "Simple CAD program powered by Common-Lisp"
+			    :authors '("Burdukov Denis <litetabs@gmail.com>")
+			    :license "LGPL"
+			    :website "http://cl-cad.blogspot.com")))
+    (gtk:dialog-run dlg)
+    (gtk:object-destroy dlg)))
 
 (defun cc-expose (widget)
   (multiple-value-bind (w h) (gdk:drawable-get-size (widget-window widget))
@@ -9,16 +93,18 @@
         (screen-drawer w h)
         nil))))
 
-(defun main-window ()
+(defun main ()
   (load-config)
   (within-main-loop
-    (let* ((w (make-instance 'gtk-window :title "CL-CAD" :type :toplevel :window-position :center :default-width 1024 :default-height 600 :app-paintable t))
-	   (v-box (make-instance 'v-box))
-	   (h-box (make-instance 'h-box))
-	 (menu-notebook (make-instance 'notebook :enable-popup t))
-	 (draw-area (make-instance 'drawing-area))
-	 (vpaned (make-instance 'v-paned))
-	 (toolbar (make-instance 'toolbar :show-arrow t :toolbar-style :icons :tooltips t))
+   (let* ((app (make-app))
+	  (ui (make-instance 'gtk:ui-manager))
+	  (main-window (make-instance 'gtk-window :title "CL-CAD" :type :toplevel :window-position :center :default-width 1024 :default-height 600 :app-paintable t))
+	  (v-box (make-instance 'v-box))
+	  (h-box (make-instance 'h-box))
+	  (menu-notebook (make-instance 'notebook :enable-popup t))
+	  (draw-area (make-instance 'drawing-area))
+	  (vpaned (make-instance 'v-paned))
+	  (toolbar (make-instance 'toolbar :show-arrow t :toolbar-style :icons :tooltips t))
 	  ;terminal
 	 (term-notebook (make-instance 'notebook :enable-popup t :tab-pos :left))
 	 (term-vbox (make-instance 'v-box))
@@ -106,7 +192,7 @@
 	 (full-window 0)
 	 (term-file-name nil))
       ;;;pack	   
-      (container-add w v-box)
+      (container-add main-window v-box)
      (box-pack-start v-box toolbar :expand nil)
      (container-add v-box vpaned)
      (container-add vpaned h-box)
@@ -207,8 +293,9 @@
      (table-attach construct-table button-fillet 0 1 1 2)
      (table-attach construct-table button-mirror 1 2 1 2)
      (table-attach construct-table button-offset 2 3 1 2)
+     (setf (app-main-window app) main-window)
      ;;;g-signals
-     (gobject:g-signal-connect w "destroy" (lambda (b) (declare (ignore b)) (leave-gtk-main)))
+     (gobject:g-signal-connect (app-main-window app) "destroy" (lambda (b) (declare (ignore b)) (e-close app)))
      (gobject:g-signal-connect draw-area "motion-notify-event" (lambda (widget event)
 								 (declare (ignore widget))
 			  					 (setf *current-x* (gdk:event-motion-x event)
@@ -236,11 +323,11 @@
 						   (pushnew :button-press-mask (gdk:gdk-window-events (widget-window draw-area)))))
     ; (gobject:g-signal-connect draw-area "button-press-event" (lambda (widget event)
 ;								(declare (ignore widget event))
-     (gobject:g-signal-connect button-save "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
-     (gobject:g-signal-connect button-save-as "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
-     (gobject:g-signal-connect button-new "clicked" (lambda (w) (declare (ignore w)) (make-new-file-window)))
-     (gobject:g-signal-connect button-open "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
-;     (gobject:g-signal-connect button-print "clicked"
+     (gobject:g-signal-connect button-save "clicked" (lambda (w) (declare (ignore w)) (cb-save app)))
+     (gobject:g-signal-connect button-save-as "clicked" (lambda (w) (declare (ignore w)) (cb-save-as app)))
+     (gobject:g-signal-connect button-new "clicked" (lambda (w) (declare (ignore w)) (cb-new app)))
+     (gobject:g-signal-connect button-open "clicked" (lambda (w) (declare (ignore w)) (cb-open app)))
+     (gobject:g-signal-connect button-print "clicked" (lambda (w) (declare (ignore w)) (cb-about app)))
      (gobject:g-signal-connect button-print-prop "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-file-prop "clicked" (lambda (w) (declare (ignore w)) (file-properties-window)))
      (gobject:g-signal-connect button-color-selection "color-changed" (lambda (s) (declare (ignore s)) 
@@ -251,12 +338,9 @@
      (gobject:g-signal-connect button-system-properties "clicked" (lambda (w) (declare (ignore w)) (draw-properties-window)))
      (gobject:g-signal-connect button-layers "clicked" (lambda (w) (declare (ignore w)) (layers-window)))
      (gobject:g-signal-connect button-full "toggled" (lambda (b) (declare (ignore b))
-							     (if (evenp full-window) (gtk-window-fullscreen w) (gtk-window-unfullscreen w))
+							     (if (evenp full-window) (gtk-window-fullscreen (app-main-window app)) (gtk-window-unfullscreen (app-main-window app)))
 							     (incf full-window)))
      (gobject:g-signal-connect button-osnap "clicked" (lambda (b) (declare (ignore b)) (osnap-window)))
-  ;   (gobject:g-signal-connect button-line "clicked" (lambda (widget) (declare (ignore widget))
-;							     (setf (cairo-w-draw-fn draw-area)
-;								   (draw-line))))
      (gobject:g-signal-connect button-ray "clicked" (lambda (w) (declare (ignore w)) 
 							    (coming-soon-window)))
      (gobject:g-signal-connect button-construction "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
@@ -300,13 +384,13 @@
      (gobject:g-signal-connect term-save-as "clicked" (cb-term-save-as term-file-name))
      (gobject:g-signal-connect term-open "clicked" (cb-term-open term-text-view term-file-name))
      (gobject:g-signal-connect term-eval "clicked" (cb-term-eval term-text-view))
-     (widget-show w)
+     (widget-show (app-main-window app))
      (push :pointer-motion-mask (gdk-window-events (widget-window draw-area)))
      (push :scroll-mask (gdk-window-events (widget-window draw-area)))
      (push :button-press-mask (gdk-window-events (widget-window draw-area)))))
   (save-config))
 
-(export 'main-window)
+(export 'main)
 
 ;terminal
 (defun cb-term-new (term-text-view term-file-name)
@@ -359,7 +443,7 @@
 		    (text-buffer-insert buffer value-str :position (text-buffer-get-iter-at-offset buffer pos)))))))))
 
 (defun main-and-quit ()
-  (main-window)
+  (main)
   #+sbcl(sb-ext:quit)
   #+clozure(ccl:quit))
 

@@ -1,18 +1,5 @@
 (in-package :cl-cad)
 
-(defun about-window ()
-  (let ((dlg (make-instance 'about-dialog
-			    :window-position :center-on-parent
-			    :program-name "CL-CAD"
-			    :version "0.1"
-			    :copyright "Copyright 2010, Burdukov Denis"
-			    :comments "Simple CAD program powered by Common-Lisp"
-			    :authors '("Burdukov Denis <litetabs@gmail.com>")
-			    :license "LGPL"
-			    :website "http://cl-cad.blogspot.com")))
-    (gtk:dialog-run dlg)
-    (gtk:object-destroy dlg)))
-
 (defun ask (parent-window message)
   (let ((dlg (make-instance 'gtk:message-dialog
 			    :text message
