@@ -19,6 +19,7 @@
 	       (:file "cl-cad.osnaps")
 	       (:file "cl-cad.utils")
 	       (:file "cl-cad.input")
+	       (:file "cl-cad.grid")
 	       (:file "cl-cad.main"))
   :depends-on (:cl-gtk2-glib 
 	       :cffi

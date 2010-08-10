@@ -9,6 +9,7 @@
   default-line-width
   default-font
   osnap-area-delta
+  grid-step
   )
 
 (defvar *config* nil)

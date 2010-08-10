@@ -20,26 +20,26 @@
 (defun add-arc (layer x1 y1 z1 radius startangle endangle line-type zoom-line color-line weight)
   (push (list :title :arc :layer layer :x1 x1 :y1 y1 :z1 z1 :radius radius :startangle startangle :endangle endangle :line-type line-type :zoom-line zoom-line :color-line color-line :weight weight) *current-draw*))
 
-(defun add-continious (layer x1 y1 z1 x2 y2 z2 line-type zoom-line color-line weight)
-  (push (list :title :continious :layer layer :x1 x1 :y1 y1 :z1 z1 :x2 x2 :y2 y2 :z2 z2 :line-type line-type :zoom-line zoom-line :color-line color-line :weight weight) *current-draw*))
+(defun add-continious (layer x1 y1 z1 x2 y2 z2)
+  (push (list :title :continious :layer layer :x1 x1 :y1 y1 :z1 z1 :x2 x2 :y2 y2 :z2 z2) *current-draw*))
 
-(defun add-ray (layer x1 y1 z1 x2 y2 z2 line-type zoom-line color-line weight)
-  (push (list :title :ray :layer layer :x1 x1 :y1 y1 :z1 z1 :x2 x2 :y2 y2 :z2 z2 :line-type line-type :zoom-line zoom-line :color-line color-line :weight weight) *current-draw*))
+(defun add-ray (layer x1 y1 z1 x2 y2 z2)
+  (push (list :title :ray :layer layer :x1 x1 :y1 y1 :z1 z1 :x2 x2 :y2 y2 :z2 z2) *current-draw*))
 
 (defun add-text (layer x1 y1 z1 count style annotate alignment height angle compression mirror mirror-left line-type zoom-line color-line weight)
   (push (list :title :text :layer layer :x1 x1 :y1 y1 :z1 z1 :count count :style style :annotate annotate :alignment alignment :height height :angle angle :compression compression :mirror mirror :mirror-left mirror-left :line-type line-type :zoom-line zoom-line :color-line color-line :weight weight) *current-draw*))
 
-(defun add-mtext (layer x1 y1 z1 count style annotate alignment height angle interval zoom-line color-line weight)
-  (push (list :title :mtext :layer layer :x1 x1 :y1 y1 :z1 z1 :count count :style style :annotate annotate :alignment alignment :height height :angle angle :interval interval :zoom-line zoom-line :color-line color-line :weight weight) *current-draw*))
+;(defun add-mtext (layer x1 y1 z1 count style annotate alignment height angle interval zoom-line color-line weight)
+;  (push (list :title :mtext :layer layer :x1 x1 :y1 y1 :z1 z1 :count count :style style :annotate annotate :alignment alignment :height height :angle angle :interval interval :zoom-line zoom-line :color-line color-line :weight weight) *current-draw*))
 
 (defun add-block (layer name-block x1 y1 z1 xscale yscale zscale count rotation)
   (push (list :title :block :layer layer :name-block name-block :x1 x1 :y1 y1 :z1 z1 :xscale xscale :yscale yscale :zscale zscale :count count :rotation rotation) *current-draw*))
 
 (defun add-point (layer x1 y1 z1 color-line style)
-  (push (list :title :point :layer layer :x1 x1 :y1 y1 :z1 z1 :color-line color-line :style style) *current-draw*))
+  (push (list :title :point :layer layer :x1 x1 :y1 y1 :z1 z1 :style style) *current-draw*))
 
-(defun add-ellipse (layer x1 y1 z1 major-radius minor-radius radius-ratio start-angle end-angle color-line weight)
-  (push (list :title :ellipse :layer layer :x1 x1 :y1 y1 :z1 z1 :major-radius major-radius :minor-radius minor-radius :radius-ratio radius-ratio :start-angle start-angle :end-angle end-angle :color-line color-line :weight weight) *current-draw*))
+(defun add-ellipse (layer x1 y1 z1 major-radius minor-radius angle start-angle end-angle color-line weight)
+  (push (list :title :ellipse :layer layer :x1 x1 :y1 y1 :z1 z1 :major-radius major-radius :minor-radius minor-radius :angle angle :start-angle start-angle :end-angle end-angle :color-line color-line :weight weight) *current-draw*))
 
 (defun add-raster-image (layer x1 y1 z1 rotation-angle width height scale brightness contrast fade path show-image show-clipped transparency)
   (push (list :title :raster-image :layer layer :x1 x1 :y1 y1 :z1 z1 :rotation-angle rotation-angle :width width :height height :scale scale :brightness brightness :contrast contrast :fade fade :path path :show-image show-image :show-clipped show-clipped :transparency transparency) *current-draw*))
