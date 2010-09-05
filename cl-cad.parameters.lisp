@@ -45,9 +45,16 @@
 ;draw properties window
 (defstruct units count)
 
-(defun draw-properties-window ()
+(defun draw-properties-window (parent-window)
   (within-main-loop
-   (let* ((window (make-instance 'gtk-window :title "Properties" :type :toplevel :window-position :center :default-width 600 :default-height 400 :destroy-with-parent t))
+   (let* ((window (make-instance 'gtk-window 
+				 :title "Properties" 
+				 :type :toplevel 
+				 :window-position :center 
+				 :default-width 600 
+				 :default-height 400 
+				 :destroy-with-parent t
+				 :transient-for parent-window))
 	 (v-box (make-instance 'v-box))
 	 (h-box (make-instance 'h-box))
 	 (notebook (make-instance 'notebook :enable-popup t :tab-pos :left))
@@ -69,16 +76,18 @@
 	 (osnap-color (make-instance 'label :label "Osnap color"))
 	 (button-osnap-color-selection (make-instance 'color-button :has-opacity-control t))
 	 (point-color (make-instance 'label :label "Object points color"))
-	 (button-point-color-selection (make-instance 'color-button :has-opacity-control t)))
-     (store-add-column model "gchararray" #'units-count)
-     (store-add-item model (make-units :count "Millimeters"))
-     (store-add-item model (make-units :count "Micrometers"))
-     (store-add-item model (make-units :count "Meters"))
-     (store-add-item model (make-units :count "Kilometers"))
-     (store-add-item model (make-units :count "Inches"))
-     (store-add-item model (make-units :count "Feet"))
-     (store-add-item model (make-units :count "Yard"))
-     (store-add-item model (make-units :count "Miles"))
+	 (button-point-color-selection (make-instance 'color-button :has-opacity-control t))
+	 (author-entry (make-instance 'entry :text (config-author *config*)))
+	 (new-vbox (make-instance 'v-box)))
+     (store-add-column model "gchararray" '("uno" "due" "tre" "six"));#'units-count)
+;     (store-add-item model (make-units :count "Millimeters"))
+ ;    (store-add-item model (make-units :count "Micrometers"))
+  ;   (store-add-item model (make-units :count "Meters"))
+   ;  (store-add-item model (make-units :count "Kilometers"))
+    ; (store-add-item model (make-units :count "Inches"))
+    ; (store-add-item model (make-units :count "Feet"))
+    ; (store-add-item model (make-units :count "Yard"))
+    ; (store-add-item model (make-units :count "Miles"))
      (box-pack-start basic-vbox basic-table)
      (table-attach basic-table units-label 0 1 0 1)
      (table-attach basic-table combo-box 1 2 0 1)
@@ -100,7 +109,7 @@
 			basic-vbox
 			(make-instance 'label :label "Basic"))
      (notebook-add-page notebook
-			(make-instance 'v-box)
+			new-vbox
 			(make-instance 'label :label "New drawings"))
      (notebook-add-page notebook
 			(make-instance 'v-box)
@@ -108,6 +117,7 @@
      (notebook-add-page notebook
 			(make-instance 'v-box)
 			(make-instance 'label :label "Current draw"))
+     (box-pack-start new-vbox author-entry)
      (box-pack-start h-box button-new :expand nil)
      (box-pack-start h-box button-cancel :expand nil)
      (container-add window v-box)

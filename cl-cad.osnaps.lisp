@@ -34,7 +34,7 @@
  ; (if (equal *osnap-grid* t) (lambda ()))
  ; (if (equal *osnap-ortho* t) (lambda ())))
 
-(defun osnap-window ()
+(defun osnap-window (parent-window)
   (within-main-loop
    (let ((window (make-instance 'gtk-window 
 				:type :toplevel 
@@ -42,7 +42,8 @@
 				:window-position :center 
 				:default-width 240 
 				:default-height 320 
-				:destroy-with-parent t))
+				:destroy-with-parent t
+				:transient-for parent-window))
 	 (v-box (make-instance 'v-box))
 	 (h-box (make-instance 'h-box))
 	 (osnap-table (make-instance 'table :n-rows 11 :n-columns 2 :homogeneous nil))

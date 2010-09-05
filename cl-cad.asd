@@ -18,6 +18,7 @@
 	       (:file "cl-cad.parser")
 	       (:file "cl-cad.osnaps")
 	       (:file "cl-cad.utils")
+	       (:file "cl-cad.layers")
 	       (:file "cl-cad.input")
 	       (:file "cl-cad.grid")
 	       (:file "cl-cad.main"))

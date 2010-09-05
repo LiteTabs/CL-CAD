@@ -107,8 +107,7 @@
 				 :type :toplevel 
 				 :window-position :center 
 				 :default-width 170 
-				 :default-height 40 
-				 :destroy-with-parent t))
+				 :default-height 40 ))
 	  (label (make-instance 'label :label "Coming Soon =)")))
       (gobject:g-signal-connect window "destroy" (lambda (widget) 
 						   (declare (ignore widget)) (leave-gtk-main)))
@@ -130,7 +129,7 @@
 	    (- tz))))
 
 ;file properties
-(defun file-properties-window ()
+(defun file-properties-window (parent-window)
   (within-main-loop
    (let-ui
         (gtk-window
@@ -142,6 +141,7 @@
          :default-height 256
          :border-width 5
 	 :destroy-with-parent t
+	 :transient-for parent-window
          (v-box
           (table
            :n-rows 8
@@ -178,7 +178,7 @@
      (widget-show w))))
 
 ;make-new-file window
-(defun make-new-file-window ()
+(defun make-new-file-window (parent-window)
   (within-main-loop
     (let* ((window (make-instance 'gtk-window 
 				  :title "Make new file" 
@@ -186,7 +186,8 @@
 				  :window-position :center 
 				  :default-width 450 
 				  :default-height 260 
-				  :destroy-with-parent t))
+				  :destroy-with-parent t
+				  :transient-for parent-window))
 	   (v-box (make-instance 'v-box))
 	   (h-box (make-instance 'h-box))
 	   (notebook (make-instance 'notebook :enable-popup t))
@@ -214,123 +215,17 @@
       (container-add window v-box)
       (widget-show window))))
 
-;layers-window
-(defun layers-window ()
-  (within-main-loop
-    (let* ((window (make-instance 'gtk-window 
-				  :type :toplevel 
-				  :title "Layers" 
-				  :destroy-with-parent t))
-           (model (make-instance 'array-list-store))
-           (scroll (make-instance 'scrolled-window 
-				  :hscrollbar-policy :automatic 
-				  :vscrollbar-policy :automatic))
-           (tv (make-instance 'tree-view 
-			      :headers-visible t 
-			      :width-request 100 
-			      :height-request 300 
-			      :rules-hint t))
-           (h-box (make-instance 'h-box))
-           (v-box (make-instance 'v-box))
-           (layer-name-entry (make-instance 'entry))
-           (line-type-entry (make-instance 'entry))
-	   (color-line-entry (make-instance 'entry))
-	   (weight-entry (make-instance 'entry))
-	   (printable-entry (make-instance 'entry))
-	   (view-entry (make-instance 'entry))
-           (button (make-instance 'button :label "Add layer")))
-      (store-add-column model "gchararray" :layer-name)
-      (store-add-column model "gchararray" :line-type)
-      (store-add-column model "gchararray" :color-line)
-      (store-add-column model "gint" :weight)
-      (store-add-column model "gchararray" :printable)
-      (store-add-column model "gchararray" :view)
-      (store-add-item model (add-layer 
-			     :layer-name "0" 
-			     :line-type "continious" 
-			     :color-line "black" 
-			     :weight 1 
-			     :printable "yes" 
-			     :view "yes"))
-      (setf (tree-view-model tv) model (tree-view-tooltip-column tv) 0)
-      (gobject:g-signal-connect window "destroy" (lambda (w) 
-						   (declare (ignore w)) (leave-gtk-main)))
-      (gobject:g-signal-connect button "clicked" (lambda (b)
-                                                   (declare (ignore b))
-                                                   (store-add-item model (add-layer :layer-name (entry-text layer-name-entry)
-										     :line-type (entry-text line-type-entry)
-										     :color-line (entry-text color-line-entry)
-										     :weight (or (parse-integer (entry-text weight-entry) 
-                                                                                                             :junk-allowed t)
-                                                                                              0)
-										    :printable (or (entry-text printable-entry) "yes")
-										    :view (or (entry-text view-entry) "yes")))))
-      (gobject:g-signal-connect tv "row-activated" (lambda (tv path column)
-						     (declare (ignore tv column))
-						     (format t "You clicked on row ~A~%" (tree-path-indices path))))
-      (container-add window v-box)
-      (box-pack-start v-box h-box :expand nil)
-      (box-pack-start h-box layer-name-entry :expand nil)
-      (box-pack-start h-box line-type-entry :expand nil)
-      (box-pack-start h-box color-line-entry :expand nil)
-      (box-pack-start h-box weight-entry :expand nil)
-      (box-pack-start h-box printable-entry :expand nil)
-      (box-pack-start h-box view-entry :expand nil)
-      (box-pack-start h-box button :expand nil)
-      (box-pack-start v-box scroll)
-      (container-add scroll tv)
-      (let ((column (make-instance 'tree-view-column :title "Name" :sort-column-id 0))
-            (renderer (make-instance 'cell-renderer-text :text "A text")))
-        (tree-view-column-pack-start column renderer)
-        (tree-view-column-add-attribute column renderer "text" 0)
-        (tree-view-append-column tv column)
-        (print (tree-view-column-tree-view column))
-        (print (tree-view-column-cell-renderers column)))
-      (let ((column (make-instance 'tree-view-column :title "Line type"))
-            (renderer (make-instance 'cell-renderer-text :text "A text")))
-        (tree-view-column-pack-start column renderer)
-        (tree-view-column-add-attribute column renderer "text" 1)
-        (tree-view-append-column tv column)
-        (print (tree-view-column-tree-view column))
-        (print (tree-view-column-cell-renderers column)))
-      (let ((column (make-instance 'tree-view-column :title "Color line"))
-            (renderer (make-instance 'cell-renderer-text :text "A text")))
-        (tree-view-column-pack-start column renderer)
-        (tree-view-column-add-attribute column renderer "text" 2)
-        (tree-view-append-column tv column)
-        (print (tree-view-column-tree-view column))
-        (print (tree-view-column-cell-renderers column)))
-      (let ((column (make-instance 'tree-view-column :title "Weight"))
-            (renderer (make-instance 'cell-renderer-text :text "A text")))
-        (tree-view-column-pack-start column renderer)
-        (tree-view-column-add-attribute column renderer "text" 3)
-        (tree-view-append-column tv column)
-        (print (tree-view-column-tree-view column))
-        (print (tree-view-column-cell-renderers column)))
-      (let ((column (make-instance 'tree-view-column :title "Printable"))
-            (renderer (make-instance 'cell-renderer-text :text "A text")))
-        (tree-view-column-pack-start column renderer)
-        (tree-view-column-add-attribute column renderer "text" 4)
-        (tree-view-append-column tv column)
-        (print (tree-view-column-tree-view column))
-        (print (tree-view-column-cell-renderers column)))
-      (let ((column (make-instance 'tree-view-column :title "View"))
-            (renderer (make-instance 'cell-renderer-text :text "A text")))
-        (tree-view-column-pack-start column renderer)
-        (tree-view-column-add-attribute column renderer "text" 5)
-        (tree-view-append-column tv column)
-        (print (tree-view-column-tree-view column))
-        (print (tree-view-column-cell-renderers column)))
-      (widget-show window))))
+
 
 ;entry
-(defun entry-window ()
+(defun entry-window (parent-window)
   (within-main-loop
     (let ((window (make-instance 'gtk-window 
 				 :type :toplevel 
 				 :title "Entry" 
 				 :window-position :center 
-				 :destroy-with-parent t))
+				 :destroy-with-parent t
+				 :transient-for parent-window))
 	  (vbox (make-instance 'v-box))
 	  (hbox (make-instance 'h-box))
 	  (entry (make-instance 'entry))
