@@ -315,7 +315,7 @@
                       (if style (setf (getf row :style) style)))
                 row) *current-draw*)))
 
-(defun update-properties (selector-fn &key file-name subject author keywords comments hyperlink created modified format hpole vpole background-color metrics space)
+(defun update-properties (selector-fn &key file-name subject author keywords comments hyperlink created modified)
            (setf *current-draw*
                (mapcar
                 #'(lambda (row)
@@ -327,13 +327,7 @@
                       (if comments (setf (getf row :comments) comments))
                       (if hyperlink (setf (getf row :hyperlink) hyperlink))
                       (if created (setf (getf row :created) created))
-                      (if modified (setf (getf row :modified) modified))
-                      (if format (setf (getf row :format) format))
-                      (if hpole (setf (getf row :hpole) hpole))
-                      (if vpole (setf (getf row :vpole) vpole))
-                      (if background-color (setf (getf row :background-color) background-color))
-                      (if metrics (setf (getf row :metrics) metrics))
-                      (if space (setf (getf row :space) space)))
+                      (if modified (setf (getf row :modified) modified)))
                 row) *current-draw*)))
 ;sample
-;(update (where :title "title") :x1 1
+;(update (where :title :title) :x1 1)
