@@ -1,7 +1,10 @@
 (in-package :cl-cad)
 
 (defstruct config 
-  background-color
+  drawing-area-color
+  dim-color
+  osnap-color
+  point-color
   default-format
   default-units
   default-space
@@ -10,6 +13,8 @@
   default-font
   osnap-area-delta
   grid-step
+  highlight-points
+  autosplitting
   )
 
 (defvar *config* nil)
