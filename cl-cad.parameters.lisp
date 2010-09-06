@@ -42,7 +42,6 @@
 (defparameter *osnap-ortho* nil)
 (defparameter *osnap-grid* nil)
 
-;draw properties window
 (defstruct units count)
 
 (defun draw-properties-window (parent-window)
@@ -70,11 +69,11 @@
 	 (split (make-instance 'label :label "Autosplitting"))
 	 (split-check (make-instance 'check-button :label "New points split existing entities" :active (config-autosplitting *config*)))
 	 (drawing-area-color (make-instance 'label :label "Drawing area color"))
-	 (button-drawing-area-color-selection (make-instance 'color-button))
+	 (button-drawing-area-color-selection (make-instance 'color-button :color (config-drawing-area-color *config*)))
 	 (dim-color (make-instance 'label :label "Dimension color"))
-	 (button-dim-color-selection (make-instance 'color-button))
+	 (button-dim-color-selection (make-instance 'color-button :color (config-dim-color *config*)))
 	 (osnap-color (make-instance 'label :label "Osnap color"))
-	 (button-osnap-color-selection (make-instance 'color-button))
+	 (button-osnap-color-selection (make-instance 'color-button :color (config-osnap-color *config*)))
 	 (point-color (make-instance 'label :label "Object points color"))
 	 (button-point-color-selection (make-instance 'color-button :color (config-point-color *config*)))
 	 (author-entry (make-instance 'entry :text (config-author *config*)))
@@ -162,5 +161,6 @@
 						     (setf (config-dim-color *config*) (color-button-color button-dim-color-selection))
 						     (setf (config-osnap-color *config*) (color-button-color button-osnap-color-selection))
 						     (setf (config-point-color *config*) (color-button-color button-point-color-selection))
+						     (save-config)
 						     (object-destroy window)))
      (widget-show window))))
