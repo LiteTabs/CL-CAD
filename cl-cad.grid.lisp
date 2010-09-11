@@ -31,8 +31,8 @@
   (if (equal *osnap-grid* t)
       (draw-grid w h *grid-step*)
       nil)
- ; (draw-space)
-  (parser w h))
+  (parser w h)
+  (draw-shadow))
 
 (defun draw-2d-space (w h)
   (save)
