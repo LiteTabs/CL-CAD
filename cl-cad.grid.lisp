@@ -36,7 +36,7 @@
 
 (defun draw-2d-space (w h)
   (save)
-  (set-source-rgb 1 1 1)
+  (set-source-rgb 0 0 0)
   (paint)
   (restore)
   (set-source-rgb 0 1 0)
