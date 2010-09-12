@@ -24,6 +24,8 @@
 ;osnaps
 (defvar *x* nil)
 (defvar *y* nil)
+(defvar *last-x* nil)
+(defvar *last-y* nil) 
 (defvar *current-x* nil)
 (defvar *current-y* nil)
 (defparameter *osnap-area-delta* 10)

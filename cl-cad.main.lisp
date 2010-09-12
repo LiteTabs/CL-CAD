@@ -305,6 +305,7 @@
 								(declare (ignore widget))
 								(setf *x* *current-x*
 								      *y* *current-y*)
+								(setf *last-x* *x* *last-y* *y*)
 								(setf *end* t)
 								(widget-queue-draw draw-area)))
      (gobject:g-signal-connect draw-area "scroll-event" (lambda (object event)
