@@ -46,6 +46,12 @@
 
 (defstruct units count)
 
+(defun color-cairo-to-gdk (a)
+  (* a 65535))
+
+(defun color-gtk-to-cairo (a)
+  (/ a 65535))
+
 (defun draw-properties-window (parent-window)
   (within-main-loop
    (let* ((window (make-instance 'gtk-window 

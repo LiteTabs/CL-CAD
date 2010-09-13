@@ -48,7 +48,7 @@
 ;  (stroke)
   (if (equal *end* 2)
    (progn 
-     (add-line "0" *x* *y* 0 *current-x* *current-y* 0 "continious" 1 1 1)
+     (add-line "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0 "continious" 1 1 1)
      (setf *x* 0 *y* 0)
      (setf *end* 0))))
 
@@ -61,22 +61,29 @@
        (if (equal *y* 0) 
 	   *current-y*
 	   *y*)
-       (get-coord-length)
+       (if (equal *end* 0)
+	   0
+	   (get-coord-length))
        0 (* 2 pi))
   (stroke)
-  (set-source-rgb 0 0 0)
+  (set-source-rgb 0 1 0)
   (move-to (+ *x* 5) *y*)
   (line-to (- *x* 5) *y*)
   (move-to *x* (+ *y* 5))
   (line-to *x* (- *y* 5))
   (stroke)
   (set-source-rgb 0 1 0)
-  (move-to *x* *y*)
+  (move-to (if (equal *x* 0) 
+	       *current-x*
+	       *x*)
+	   (if (equal *y* 0) 
+	       *current-y*
+	       *y*))
   (line-to *current-x* *current-y*)
   (stroke)
   (if (equal *end* 2)
       (progn
-	(add-circle "0" *x* *y* 0 (get-coord-length) 1 1 1 1)
+	(add-circle "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ (get-coord-length) *scroll-units*) 1 1 1 1)
 	(setf *x* 0 *y* 0)
 	(setf *end* 0))))
 
@@ -91,7 +98,12 @@
        *current-y*
        *y*))
   (line-to *current-x* *current-y*)
-  (stroke))
+  (stroke)
+  (if (equal *end* 2)
+      (progn 
+       (add-continious "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0)
+       (setf *x* 0 *y* 0)
+       (setf *end* 0))))
 
 (defun input-for-ray ()
   (set-source-rgb 1 0 0)
@@ -104,7 +116,12 @@
        *current-y*
        *y*))
   (line-to *current-x* *current-y*)
-  (stroke))
+  (stroke)
+  (if (equal *end* 2)
+      (progn 
+       (add-ray "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0)
+       (setf *x* 0 *y* 0)
+       (setf *end* 0))))
   
 
 (defun input-for-point ()
@@ -114,4 +131,9 @@
 	     (- (/ *scroll-units* *current-y*) 0.5)
 	     1 1)
   (fill-path)
-  (restore))
+  (restore)
+  (if (equal *end* 1)
+      (progn 
+       (add-point "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 1 1)
+       (setf *x* 0 *y* 0)
+       (setf *end* 0))))

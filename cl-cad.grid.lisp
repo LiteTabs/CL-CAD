@@ -36,7 +36,10 @@
 
 (defun draw-2d-space (w h)
   (save)
-  (set-source-rgb 0 0 0)
+  (set-source-rgb 
+   (color-gtk-to-cairo (color-red (config-drawing-area-color *config*)))
+   (color-gtk-to-cairo (color-green (config-drawing-area-color *config*)))
+   (color-gtk-to-cairo (color-blue (config-drawing-area-color *config*))))
   (paint)
   (restore)
   (set-source-rgb 0 1 0)
