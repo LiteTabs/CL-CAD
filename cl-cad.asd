@@ -21,7 +21,7 @@
 	       (:file "cl-cad.file-properties")
 	       (:file "cl-cad.layers")
 	       (:file "cl-cad.input")
-	       (:file "cl-cad.grid")
+	       (:file "cl-cad.screen")
 	       (:file "cl-cad.main"))
   :depends-on (:cl-gtk2-glib 
 	       :cffi

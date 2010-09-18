@@ -19,13 +19,18 @@
 				 "Friday" 
 				 "Saturday" 
 				 "Sunday"))
-(defvar *grid-step* 20)
+(defvar *grid-step* 5)
 
 ;osnaps
 (defvar *x* nil)
 (defvar *y* nil)
-(defvar *last-x* nil)
-(defvar *last-y* nil) 
+(defvar *x1* nil)
+(defvar *y1* nil)
+(defvar *x2* nil)
+(defvar *y2* nil)
+(defvar *angle1* 0)
+(defvar *angle2* 0)
+(defvar *length* 0)
 (defvar *current-x* nil)
 (defvar *current-y* nil)
 (defparameter *osnap-area-delta* 10)

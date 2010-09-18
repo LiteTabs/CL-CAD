@@ -7,7 +7,7 @@
   (cond
     ((equal *signal* :line) (input-for-line))
     ((equal *signal* :circle) (input-for-circle))
-    ;((equal *signal* :arc) (input-for-arc))
+    ((equal *signal* :arc) (input-for-arc))
     ((equal *signal* :continious) (input-for-continious))
     ((equal *signal* :ray) (input-for-ray))
     ((equal *signal* :point) (input-for-point))
@@ -86,6 +86,38 @@
 	(add-circle "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ (get-coord-length) *scroll-units*) 1 1 1 1)
 	(setf *x* 0 *y* 0)
 	(setf *end* 0))))
+
+(defun input-for-arc ()
+  (set-source-rgb 1 0 0)
+  (set-line-width 0.5)
+  (if (equal *end* 1)
+      (setf *angle1* (get-coord-angle)))
+  (if (equal *end* 2)
+      (setf *angle2* (get-coord-angle)))
+  (if (equal *end* 1)
+      (setf *length* (get-coord-length)))
+  (arc (if (equal *x* 0) 
+	   *current-x*
+	   *x*)
+       (if (equal *y* 0) 
+	   *current-y*
+	   *y*)
+       (if (equal *end* 0)
+	   0
+	   *length*)
+       (if (equal *end* 1)
+	   0
+	   (deg-to-rad *angle1*))
+       (if (equal *end* 2)
+	   (deg-to-rad *angle2*)
+	   (* 2 pi)))
+  (stroke)
+  (if (equal *end* 3)
+      (progn
+	(add-arc "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 *length* *angle1* *angle2* "continious" 1 1 1)
+	(setf *x* 0 *y* 0)
+	(setf *end* 0)
+	(setf *angle1* 0 *angle2* 0 *length* 0))))
 
 (defun input-for-continious ()
   (set-source-rgb 1 0 0)
