@@ -4,7 +4,7 @@
 (defvar *scroll-units* 1)
 (defparameter *current-layer* "system")
 (defparameter *current-color* "black")
-(defparameter *current-line-type* "continious")
+(defparameter *line-type* :continious)
 (defparameter *default-format* "A4")
 (defparameter *default-space* "2d")
 (defparameter *default-units* "Millimeters")

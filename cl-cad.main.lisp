@@ -105,6 +105,10 @@
 	  (toolbar (make-instance 'toolbar :show-arrow t :toolbar-style :icons :tooltips t))
 	  (tools-vbox (make-instance 'v-box))
 	  (command-entry (make-instance 'entry))
+	  (model-width (make-instance 'array-list-store))
+	  (model-type (make-instance 'array-list-store))
+	  (line-width-combo (make-instance 'combo-box :model model-width))
+	  (line-type-combo (make-instance 'combo-box :model model-type))
 	 ;;;system
 	 (button-save (make-instance 'button :image (make-instance 'image :stock "gtk-save")))
 	 (button-save-as (make-instance 'button :image (make-instance 'image :stock "gtk-save-as")))
@@ -206,6 +210,8 @@
      (container-add toolbar button-select-font)
      (container-add toolbar button-full)
      (container-add toolbar button-osnap)
+     (container-add toolbar line-width-combo)
+     (container-add toolbar line-type-combo)
      ;primitives
      (box-pack-start tools-vbox primitives-expander :expand nil)
      (container-add primitives-expander primitives-table)

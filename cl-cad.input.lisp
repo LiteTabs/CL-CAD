@@ -48,7 +48,7 @@
 ;  (stroke)
   (if (equal *end* 2)
    (progn 
-     (add-line "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0 "continious" 1 1 1)
+     (add-line *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0 *line-type* 1 1 1)
      (setf *x* 0 *y* 0)
      (setf *end* 0))))
 
@@ -83,7 +83,7 @@
   (stroke)
   (if (equal *end* 2)
       (progn
-	(add-circle "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ (get-coord-length) *scroll-units*) 1 1 1 1)
+	(add-circle "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ (get-coord-length) *scroll-units*) *line-type* 1 1 1)
 	(setf *x* 0 *y* 0)
 	(setf *end* 0))))
 
@@ -114,7 +114,7 @@
   (stroke)
   (if (equal *end* 3)
       (progn
-	(add-arc "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 *length* *angle1* *angle2* "continious" 1 1 1)
+	(add-arc *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 *length* *angle1* *angle2* *line-type* 1 1 1)
 	(setf *x* 0 *y* 0)
 	(setf *end* 0)
 	(setf *angle1* 0 *angle2* 0 *length* 0))))
@@ -133,7 +133,7 @@
   (stroke)
   (if (equal *end* 2)
       (progn 
-       (add-continious "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0)
+       (add-continious *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0)
        (setf *x* 0 *y* 0)
        (setf *end* 0))))
 
@@ -151,7 +151,7 @@
   (stroke)
   (if (equal *end* 2)
       (progn 
-       (add-ray "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0)
+       (add-ray *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0)
        (setf *x* 0 *y* 0)
        (setf *end* 0))))
   
@@ -166,6 +166,6 @@
   (restore)
   (if (equal *end* 1)
       (progn 
-       (add-point "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 1 1)
+       (add-point *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 1 1)
        (setf *x* 0 *y* 0)
        (setf *end* 0))))
