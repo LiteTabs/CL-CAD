@@ -32,7 +32,6 @@
         nil)
       t))
 
-
 (defun cb-open (app)
   (when (ensure-data-is-saved app)
     (let ((dlg (make-instance 'gtk:file-chooser-dialog
@@ -103,22 +102,10 @@
 	  (h-box (make-instance 'h-box))
 	  (menu-notebook (make-instance 'notebook :enable-popup t))
 	  (draw-area (make-instance 'drawing-area))
-	  (vpaned (make-instance 'v-paned))
 	  (toolbar (make-instance 'toolbar :show-arrow t :toolbar-style :icons :tooltips t))
-	  ;terminal
-	 (term-notebook (make-instance 'notebook :enable-popup t :tab-pos :left))
-	 (term-vbox (make-instance 'v-box))
-	 (term-hbox (make-instance 'h-box))
-	 (tools-vbox (make-instance 'v-box))
-	 (term-buffer (make-instance 'text-buffer))
-	 (term-text-view (make-instance 'text-view :buffer term-buffer))
-	 (term-new (make-instance 'button :image (make-instance 'image :stock "gtk-new")))
-	 (term-open (make-instance 'button :image (make-instance 'image :stock "gtk-open")))
-	 (term-save (make-instance 'button :image (make-instance 'image :stock "gtk-save")))
-	 (term-save-as (make-instance 'button :image (make-instance 'image :stock "gtk-save-as")))
-	 (term-eval (make-instance 'button :image (make-instance 'image :stock "gtk-execute")))
-	 (term-scrolled (make-instance 'scrolled-window :hscrollbar-policy :automatic :vscrollbar-policy :automatic))
-         ;;;system
+	  (tools-vbox (make-instance 'v-box))
+	  (command-entry (make-instance 'entry))
+	 ;;;system
 	 (button-save (make-instance 'button :image (make-instance 'image :stock "gtk-save")))
 	 (button-save-as (make-instance 'button :image (make-instance 'image :stock "gtk-save-as")))
 	 (button-new (make-instance 'button :image (make-instance 'image :stock "gtk-new")))
@@ -189,24 +176,13 @@
 	 (button-fillet (make-instance 'button :image (make-instance 'image :file (namestring (merge-pathnames "graphics/construct/cons_fillet.svg" *src-location*)))))
 	 (button-mirror (make-instance 'button :image (make-instance 'image :file (namestring (merge-pathnames "graphics/construct/cons_mirror.svg" *src-location*)))))
 	 (button-offset (make-instance 'button :image (make-instance 'image :file (namestring (merge-pathnames "graphics/construct/cons_offset.svg" *src-location*)))))
-	 (full-window 0)
-	 (term-file-name nil))
-      ;;;pack	   
-      (container-add main-window v-box)
+	 (full-window 0))
+     (container-add main-window v-box)
      (box-pack-start v-box toolbar :expand nil)
-     (container-add v-box vpaned)
-     (container-add vpaned h-box)
+     (container-add v-box h-box)
      (box-pack-start h-box menu-notebook :expand nil)
      (box-pack-start h-box draw-area :expand t)
-     (container-add vpaned term-notebook)
-     (box-pack-start term-vbox term-hbox :expand nil)
-     (container-add term-vbox term-scrolled)
-     (container-add term-scrolled term-text-view)
-     (box-pack-start term-hbox term-new :expand nil)
-     (box-pack-start term-hbox term-open :expand nil)
-     (box-pack-start term-hbox term-save :expand nil)
-     (box-pack-start term-hbox term-save-as :expand nil)
-     (box-pack-start term-hbox term-eval :expand nil)
+     (box-pack-start v-box command-entry :expand nil)
      (notebook-add-page menu-notebook
 			tools-vbox
 			(make-instance 'label :label "Tools"))
@@ -216,12 +192,6 @@
      (notebook-add-page menu-notebook
 			(make-instance 'v-box)
 			(make-instance 'label :label "Statistic"))
-     (notebook-add-page term-notebook 
-			term-vbox
-			(make-instance 'label :label "Terminal"))
-     (notebook-add-page term-notebook
-			(make-instance 'v-box)
-			(make-instance 'label :label "Palettes"))
      ;system 
      (container-add toolbar button-save)
      (container-add toolbar button-save-as)
@@ -390,11 +360,6 @@
      (gobject:g-signal-connect button-horiz "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-leader "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-vert "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
-     (gobject:g-signal-connect term-new "clicked" (cb-term-new term-text-view term-file-name))
-     (gobject:g-signal-connect term-save "clicked" (cb-term-save term-text-view term-file-name))
-     (gobject:g-signal-connect term-save-as "clicked" (cb-term-save-as term-file-name))
-     (gobject:g-signal-connect term-open "clicked" (cb-term-open term-text-view term-file-name))
-     (gobject:g-signal-connect term-eval "clicked" (cb-term-eval term-text-view))
      (widget-show (app-main-window app))
      (push :pointer-motion-mask (gdk-window-events (widget-window draw-area)))
      (push :scroll-mask (gdk-window-events (widget-window draw-area)))
@@ -403,55 +368,7 @@
 
 (export 'main)
 
-;terminal
-(defun cb-term-new (term-text-view term-file-name)
-  (lambda (&rest args) (declare (ignore args)) 
-	  (setf term-file-name nil
-		(text-buffer-text (text-view-buffer term-text-view)) "")))
 
-(defun cb-term-save (term-text-view term-file-name)
-  (lambda (&rest args) (declare (ignore args)) 
-	  (if term-file-name
-	      (with-open-file (file term-file-name :direction :output :if-exists :supersede)
-		(write-string (text-buffer-text (text-view-buffer term-text-view)) file))
-	      (cb-term-save-as term-file-name))))
-
-(defun cb-term-save-as (term-file-name)
-  (lambda (&rest args) (declare (ignore args)) 
-	  (let ((d (make-instance 'file-chooser-dialog :action :save :title "Save file")))
-	    (when term-file-name (setf (file-chooser-filename d) term-file-name))
-	    (dialog-add-button d "gtk-save" :accept)
-	    (dialog-add-button d "gtk-cancel" :cancel)
-	    (if (eq :accept (dialog-run d))
-		(progn
-		  (setf term-file-name (file-chooser-filename d))
-		  (object-destroy d))
-		(object-destroy d)))))
-
-(defun cb-term-open (term-text-view term-file-name)
-  (lambda (&rest args) (declare (ignore args)) 
-	  (let ((d (make-instance 'file-chooser-dialog :action :open :title "Open file")))
-	    (when term-file-name (setf (file-chooser-filename d) term-file-name))
-	    (dialog-add-button d "gtk-open" :accept)
-	    (dialog-add-button d "gtk-cancel" :cancel)
-	    (when (eq :accept (dialog-run d))
-	      (setf term-file-name (file-chooser-filename d)
-		    (text-buffer-text (text-view-buffer term-text-view)) (read-text-file term-file-name)))
-	    (object-destroy d))))
-
-(defun cb-term-eval (term-text-view)
-  (lambda (&rest args) (declare (ignore args)) 
-	  (let ((buffer (text-view-buffer term-text-view)))
-	    (multiple-value-bind (i1 i2) (text-buffer-get-selection-bounds buffer)
-	      (when (and i1 i2)
-		(with-gtk-message-error-handler
-		  (let* ((text (text-buffer-slice buffer i1 i2))
-			 (value (eval (read-from-string text)))
-			 (value-str (format nil "~A" value))
-			 (pos (max (text-iter-offset i1) (text-iter-offset i2))))
-		    (text-buffer-insert buffer " => " :position (text-buffer-get-iter-at-offset buffer pos))
-		    (incf pos (length " => "))
-		    (text-buffer-insert buffer value-str :position (text-buffer-get-iter-at-offset buffer pos)))))))))
 
 (defun main-and-quit ()
   (main)
