@@ -28,6 +28,11 @@
     (* (- *y* *current-y*)
        (- *y* *current-y*)))))
 
+(defun set-fantom-color ()
+  (set-source-rgb (color-gtk-to-cairo (color-red (config-dim-color *config*)))
+		  (color-gtk-to-cairo (color-green (config-dim-color *config*)))
+		  (color-gtk-to-cairo (color-blue (config-dim-color *config*)))))
+
 (defun input-for-line ()
   (set-source-rgb 1 0 0)
   (set-line-width 0.5)
@@ -50,7 +55,7 @@
 ;  (stroke)
   (if (equal *end* 2)
    (progn 
-     (add-line *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0 *line-type* 1 1 1)
+     (add-line *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0 *line-type* 1 *current-color* *current-width*)
      (setf *x* 0 *y* 0)
      (setf *end* 0))))
 
@@ -68,13 +73,13 @@
 	   (get-coord-length))
        0 (* 2 pi))
   (stroke)
-  (set-source-rgb 0 1 0)
+  (set-source-rgb 1 0 0)
   (move-to (+ *x* 5) *y*)
   (line-to (- *x* 5) *y*)
   (move-to *x* (+ *y* 5))
   (line-to *x* (- *y* 5))
   (stroke)
-  (set-source-rgb 0 1 0)
+  (set-fantom-color)
   (move-to (if (equal *x* 0) 
 	       *current-x*
 	       *x*)
@@ -85,7 +90,7 @@
   (stroke)
   (if (equal *end* 2)
       (progn
-	(add-circle "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ (get-coord-length) *scroll-units*) *line-type* 1 1 1)
+	(add-circle "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ (get-coord-length) *scroll-units*) *line-type* 1  *current-color* *current-width*)
 	(setf *x* 0 *y* 0)
 	(setf *end* 0))))
 
@@ -116,7 +121,7 @@
   (stroke)
   (if (equal *end* 3)
       (progn
-	(add-arc *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 *length* *angle1* *angle2* *line-type* 1 1 1)
+	(add-arc *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 *length* *angle1* *angle2* *line-type* 1  *current-color* *current-width*)
 	(setf *x* 0 *y* 0)
 	(setf *end* 0)
 	(setf *angle1* 0 *angle2* 0 *length* 0))))
@@ -168,7 +173,7 @@
   (restore)
   (if (equal *end* 1)
       (progn 
-       (add-point *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 1 1)
+       (add-point *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 *current-color* 1)
        (setf *x* 0 *y* 0)
        (setf *end* 0))))
 
@@ -191,7 +196,7 @@
   (restore)
   (if (equal *end* 2)
       (progn 
-       (add-rectangle *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0 *line-type* 1 1 1)
+       (add-rectangle *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0 *line-type* 1 *current-color* *current-width*)
        (setf *x* 0 *y* 0)
        (setf *end* 0))))
 
@@ -209,5 +214,5 @@
       (if (equal *text-buffer-count* "")
 	  (setf *end* 0)
 	  (progn 
-	    (add-text *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 *text-buffer-count* *current-font* 0 1)
+	    (add-text *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 *text-buffer-count* *current-font* 0 *current-color*)
 	    (setf *text-buffer-count* nil *x* 0 *y* 0 *end* 0)))))
