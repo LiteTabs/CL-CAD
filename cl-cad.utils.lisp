@@ -151,9 +151,10 @@
 (defun entry-window (parent-window)
   (within-main-loop
     (let ((window (make-instance 'gtk-window 
-				 :type :toplevel 
-				 :title "Entry" 
-				 :window-position :center 
+				 :type :toplevel
+				 :decorated nil
+				 :accept-focus t
+				 :window-position :center-on-parent
 				 :destroy-with-parent t
 				 :transient-for parent-window))
 	  (vbox (make-instance 'v-box))
@@ -169,6 +170,8 @@
 				  (declare (ignore widget)) (leave-gtk-main)))
       (gobject:g-signal-connect button "clicked" 
 				(lambda (widget) 
-				  (declare (ignore widget)) (object-destroy window)))
+				  (declare (ignore widget))
+				  (setf *text-buffer-count* (entry-text entry))
+				  (object-destroy window)))
       (widget-show window))))
 

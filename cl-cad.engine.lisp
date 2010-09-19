@@ -20,14 +20,17 @@
 (defun add-arc (layer x1 y1 z1 radius startangle endangle line-type zoom-line color-line weight)
   (push (list :title :arc :layer layer :x1 x1 :y1 y1 :z1 z1 :radius radius :startangle startangle :endangle endangle :line-type line-type :zoom-line zoom-line :color-line color-line :weight weight) *current-draw*))
 
+(defun add-rectangle (layer x1 y1 z1 x2 y2 z2 line-type zoom-line color-line weight)
+  (push (list :title :rectangle :layer layer :x1 x1 :y1 y1 :z1 z1 :x2 x2 :y2 y2 :z2 z2 :line-type line-type :zoom-line zoom-line :color-line color-line :weight weight) *current-draw*))
+
 (defun add-continious (layer x1 y1 z1 x2 y2 z2)
   (push (list :title :continious :layer layer :x1 x1 :y1 y1 :z1 z1 :x2 x2 :y2 y2 :z2 z2) *current-draw*))
 
 (defun add-ray (layer x1 y1 z1 x2 y2 z2)
   (push (list :title :ray :layer layer :x1 x1 :y1 y1 :z1 z1 :x2 x2 :y2 y2 :z2 z2) *current-draw*))
 
-(defun add-text (layer x1 y1 z1 count style annotate alignment height angle compression mirror mirror-left line-type zoom-line color-line weight)
-  (push (list :title :text :layer layer :x1 x1 :y1 y1 :z1 z1 :count count :style style :annotate annotate :alignment alignment :height height :angle angle :compression compression :mirror mirror :mirror-left mirror-left :line-type line-type :zoom-line zoom-line :color-line color-line :weight weight) *current-draw*))
+(defun add-text (layer x1 y1 z1 count style angle color-line)
+  (push (list :title :text :layer layer :x1 x1 :y1 y1 :z1 z1 :count count :style style :angle angle :color-line color-line) *current-draw*))
 
 ;(defun add-mtext (layer x1 y1 z1 count style annotate alignment height angle interval zoom-line color-line weight)
 ;  (push (list :title :mtext :layer layer :x1 x1 :y1 y1 :z1 z1 :count count :style style :annotate annotate :alignment alignment :height height :angle angle :interval interval :zoom-line zoom-line :color-line color-line :weight weight) *current-draw*))

@@ -11,6 +11,8 @@
     ((equal *signal* :continious) (input-for-continious))
     ((equal *signal* :ray) (input-for-ray))
     ((equal *signal* :point) (input-for-point))
+    ((equal *signal* :rectangle) (input-for-rectangle))
+    ((equal *signal* :text) (input-for-text))
     ))
 
 (defun get-coord-angle ()
@@ -169,3 +171,43 @@
        (add-point *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 1 1)
        (setf *x* 0 *y* 0)
        (setf *end* 0))))
+
+(defun input-for-rectangle ()
+  (set-source-rgb 1 0 0)
+  (set-line-width 0.5)
+  (rectangle (if (equal *x* 0) 
+		 *current-x*
+		 *x*)
+	     (if (equal *y* 0) 
+		 *current-y*
+		 *y*)
+	     (if (equal *x* 0)
+		 0
+		 (- *current-x* *x*))
+	     (if (equal *y* 0)
+		 0
+		 (- *current-y* *y*)))
+  (stroke)
+  (restore)
+  (if (equal *end* 2)
+      (progn 
+       (add-rectangle *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0 *line-type* 1 1 1)
+       (setf *x* 0 *y* 0)
+       (setf *end* 0))))
+
+(defun input-for-text ()
+  (set-source-rgb 1 0 0)
+  (move-to (if (equal *x* 0) 
+		 *current-x*
+		 *x*)
+	     (if (equal *y* 0) 
+		 *current-y*
+		 *y*))
+  (show-text *text-buffer-count*)
+  (stroke)
+  (if (equal *end* 1)
+      (if (equal *text-buffer-count* "")
+	  (setf *end* 0)
+	  (progn 
+	    (add-text *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 *text-buffer-count* *current-font* 0 1)
+	    (setf *text-buffer-count* nil *x* 0 *y* 0 *end* 0)))))

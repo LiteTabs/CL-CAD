@@ -1,15 +1,15 @@
 (in-package :cl-cad)
 
-(defun code-editor ()
+(defun code-editor (parent-window)
   (within-main-loop
    (let* ((window (make-instance 'gtk-window 
 				  :title "Make new file" 
 				  :type :toplevel 
 				  :window-position :center 
 				  :default-width 450 
-				  :default-height 260))
-				 ; :destroy-with-parent t
-				 ; :transient-for parent-window))
+				  :default-height 260
+				  :destroy-with-parent t
+				  :transient-for parent-window))
 	  (term-vbox (make-instance 'v-box))
 	  (term-hbox (make-instance 'h-box))
 	  (term-buffer (make-instance 'text-buffer))

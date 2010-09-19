@@ -118,11 +118,11 @@
 
 
 (defun parser-text (cd)
+  (save)
   (set-source-rgb 0 0 0)
   (move-to (* *scroll-units* (getf cd :x1))
 	   (* *scroll-units* (getf cd :y1)))
-  (set-font-size (* *scroll-units* (getf cd :height)))
-  (select-font-face (getf cd :style) :normal :normal)
+  (select-font-face (getf cd :style))
   (show-text (getf cd :count))
   (stroke))
 
@@ -142,12 +142,12 @@
  ; (scale 2 1)
  ; (rotate (deg-to-rad (getf cd :angle)))
   (dash-gen cd)
+  (set-source-rgb 1 0 0)
+  (set-line-width (getf cd :weight))
   (arc (* *scroll-units* (getf cd :x1))
        (* *scroll-units* (getf cd :y1))
        (* *scroll-units* (getf cd :major-radius))
        0 (* 2 pi))
-  (set-source-rgb 1 0 0)
-  (set-line-width (getf cd :weight))
   (stroke)
   (restore))
   
@@ -161,6 +161,18 @@
 			(* *scroll-units* (getf cd :y1)))
     (paint)))
 
+(defun parser-rectangle (cd)
+  (save)
+  (dash-gen cd)
+  (set-source-rgb 1 1 1)
+  (set-line-width (getf cd :weight))
+  (rectangle (* *scroll-units* (getf cd :x1))
+	     (* *scroll-units* (getf cd :y1))
+	     (* *scroll-units* (- (getf cd :x2) (getf cd :x1)))
+	     (* *scroll-units* (- (getf cd :y2) (getf cd :y1))))
+  (stroke)
+  (restore))
+  
 (defun parser (w h)
   (dolist (cd *current-draw*)
 	     (cond
@@ -173,4 +185,5 @@
 	       ((equal (getf cd :title) :point) (parser-point cd))
 	       ((equal (getf cd :title) :ellipse) (parser-ellipse cd w h))
 	       ((equal (getf cd :title) :raster-image) (parser-raster-image cd))
+	       ((equal (getf cd :title) :rectangle) (parser-rectangle cd))
 	       )))

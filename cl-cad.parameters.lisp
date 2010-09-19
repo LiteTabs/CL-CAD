@@ -10,8 +10,8 @@
 (defparameter *default-units* "Millimeters")
 (defparameter *color-current-layer* nil)
 (defparameter *default-line-width* 1)
-(defparameter *default-font-size* 12)
-(defvar *text-buffer-count*)
+(defvar *current-font* "Sans 10")
+(defvar *text-buffer-count* "")
 (defparameter *week-day-names* '("Monday" 
 				 "Tuesday"
 				 "Wednesday"
@@ -90,7 +90,9 @@
 	 (point-color (make-instance 'label :label "Object points color"))
 	 (button-point-color-selection (make-instance 'color-button :color (config-point-color *config*)))
 	 (author-entry (make-instance 'entry :text (config-author *config*)))
-	 (new-vbox (make-instance 'v-box)))
+	 (new-vbox (make-instance 'v-box))
+	 (screen-vbox (make-instance 'v-box))
+	  (grid-step-spin-box (make-instance 'spin-button)))
      (store-add-column model "gchararray" #'units-count)
      (store-add-item model (make-units :count "Millimeters"))
      (store-add-item model (make-units :count "Micrometers"))
@@ -124,12 +126,13 @@
 			new-vbox
 			(make-instance 'label :label "New drawings"))
      (notebook-add-page notebook
-			(make-instance 'v-box)
+			screen-vbox
 			(make-instance 'label :label "Current screen"))
      (notebook-add-page notebook
 			(make-instance 'v-box)
 			(make-instance 'label :label "Current draw"))
-     (box-pack-start new-vbox author-entry)
+     (box-pack-start new-vbox author-entry :expand nil)
+     (box-pack-start screen-vbox grid-step-spin-box :expand nil)
      (box-pack-start h-box button-save :expand nil)
      (box-pack-start h-box button-cancel :expand nil)
      (container-add window v-box)
