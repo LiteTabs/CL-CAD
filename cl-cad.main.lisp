@@ -71,10 +71,10 @@
     (setf (app-changed app) nil)
     (setf (app-filename app) nil)))
 
-(defun cb-about (app)
+(defun cb-about (parent)
   (let ((dlg (make-instance 'about-dialog
 			    :window-position :center-on-parent
-			    :transient-for (app-main-window app)
+			    :transient-for parent
 			    :program-name "CL-CAD"
 			    :version "0.1"
 			    :copyright "Copyright 2010, Burdukov Denis"
@@ -91,6 +91,9 @@
       (with-context (ctx)
         (screen-drawer w h)
         nil))))
+
+(defstruct line-width title width)
+(defstruct line-type title type)
 
 (defun main ()
   (load-config)
@@ -110,8 +113,7 @@
 	  (line-type-combo (make-instance 'combo-box :model model-type))
 	  ;;;menu
 	  (menubar (make-instance 'menu-bar))
-	  (menuitem-file (make-instance 'menu-item 
-					:label "File"))
+	  (menuitem-file (make-instance 'menu-item :label "File"))
 	  (menuitem-edit (make-instance 'menu-item :label "Edit"))
 	  (menu-view (make-instance 'menu))
 	  (menuitem-view (make-instance 'menu-item :label "View" :submenu menu-view))
@@ -155,6 +157,7 @@
 	 (button-rectangle (make-instance 'button :image (make-instance 'image :file (namestring (merge-pathnames "graphics/objects/rectangle.svg" *src-location*)))))
 	 (button-spline (make-instance 'button :image (make-instance 'image :file (namestring (merge-pathnames "graphics/objects/spline.svg" *src-location*)))))
 	 (button-text (make-instance 'button :image (make-instance 'image :file (namestring (merge-pathnames "graphics/objects/text.svg" *src-location*)))))
+	 (button-raster-image (make-instance 'button :image (make-instance 'image :file (namestring (merge-pathnames "graphics/objects/raster-image.svg" *src-location*)))))
          ;;;modify
 	 (modify-expander (make-instance 'expander :expanded t :label "Modify"))
 	 (modify-table (make-instance 'table :n-rows 3 :n-columns 4 :homogeneous nil))
@@ -211,9 +214,6 @@
 			(make-instance 'label :label "Tools"))
      (notebook-add-page menu-notebook
 			(make-instance 'v-box)
-			(make-instance 'label :label "Files"))
-     (notebook-add-page menu-notebook
-			(make-instance 'v-box)
 			(make-instance 'label :label "Statistic"))
      ;system 
      (container-add toolbar button-save)
@@ -251,6 +251,7 @@
      (table-attach primitives-table button-rectangle 0 1 4 5)
      (table-attach primitives-table button-spline 1 2 4 5)
      (table-attach primitives-table button-text 2 3 4 5)
+     (table-attach primitives-table button-raster-image 3 4 4 5)
      ;modify
      (box-pack-start tools-vbox modify-expander :expand nil)
      (container-add modify-expander modify-table)
@@ -287,13 +288,36 @@
      (table-attach construct-table button-mirror 1 2 1 2)
      (table-attach construct-table button-offset 2 3 1 2)
      (setf (app-main-window app) main-window)
+     (store-add-column model-width "gchararray" #'line-width-title)
+     (store-add-column model-width "gchararray" #'line-width-width)
+     (store-add-column model-type "gchararray" #'line-type-title)
+     (store-add-column model-type "gchararray" #'line-type-type)
+     (store-add-item model-type (make-line-type :title "___________" :type "Continious"))
+     (store-add-item model-type (make-line-type :title "- - - - - -" :type "Dashed"))
+     (store-add-item model-type (make-line-type :title "-----------" :type "Dashed-small"))
+     (store-add-item model-type (make-line-type :title "-  -  -  - " :type "Dashed-big"))
+     (store-add-item model-type (make-line-type :title ". . . . . ." :type "Dot"))
+     (store-add-item model-type (make-line-type :title "..........." :type "Dot-small"))
+     (store-add-item model-type (make-line-type :title ".  .  .  . " :type "Dot-big"))
+     (store-add-item model-width (make-line-width :title "-----------" :width "0"))
+     (store-add-item model-width (make-line-width :title "-----------" :width "0.5"))
+     (store-add-item model-width (make-line-width :title "-----------" :width "1"))
+     (store-add-item model-width (make-line-width :title "-----------" :width "1.5"))
+     (store-add-item model-width (make-line-width :title "-----------" :width "2"))
+     (store-add-item model-width (make-line-width :title "-----------" :width "2.5"))
+     (store-add-item model-width (make-line-width :title "-----------" :width "3"))
      (let ((renderer (make-instance 'cell-renderer-text :text "A text")))
         (cell-layout-pack-start line-width-combo renderer :expand t)
         (cell-layout-add-attribute line-width-combo renderer "text" 0))
+     (let ((renderer (make-instance 'cell-renderer-text :text "A number")))
+        (cell-layout-pack-start line-width-combo renderer :expand nil)
+        (cell-layout-add-attribute line-width-combo renderer "text" 1))
      (let ((renderer (make-instance 'cell-renderer-text :text "A text")))
         (cell-layout-pack-start line-type-combo renderer :expand t)
         (cell-layout-add-attribute line-type-combo renderer "text" 0))
-     ;;;g-signals
+     (let ((renderer (make-instance 'cell-renderer-text :text "A text")))
+        (cell-layout-pack-start line-type-combo renderer :expand t)
+        (cell-layout-add-attribute line-type-combo renderer "text" 1))
      (gobject:g-signal-connect (app-main-window app) "destroy" (lambda (b) (declare (ignore b)) (e-close app)))
      (gobject:g-signal-connect draw-area "motion-notify-event" (lambda (widget event)
 								 (declare (ignore widget))
@@ -301,7 +325,7 @@
 								       *current-y* (gdk:event-motion-y event))
 								 (widget-queue-draw draw-area)))
      (gobject:g-signal-connect draw-area "button-press-event" (lambda (widget event)
-								(declare (ignore widget))
+								(declare (ignore widget event))
 								(if (equal *end* 0)
 								    (setf *x* *current-x*
 									  *y* *current-y*))
@@ -330,7 +354,7 @@
      (gobject:g-signal-connect button-print-prop "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-file-prop "clicked" (lambda (w) (declare (ignore w)) (file-properties-window (app-main-window app))))
      (gobject:g-signal-connect button-color-selection "color-set" (lambda (s) (declare (ignore s))
-									      (setf *current-color* (color-button-color button-color-selection))))
+									  (setf *current-color* (color-button-color button-color-selection))))
      (gobject:g-signal-connect button-select-font "font-set" (lambda (b) (declare (ignore b)) (setf *current-font* (font-button-font-name button-select-font))))
      (gobject:g-signal-connect button-system-properties "clicked" (lambda (w) (declare (ignore w)) (draw-properties-window (app-main-window app))))
      (gobject:g-signal-connect button-layers "clicked" (lambda (w) (declare (ignore w)) (layers-window (app-main-window app))))
@@ -378,6 +402,10 @@
 							     (setf *x* 0 *y* 0)
 							     (setf *end* 0)
 							     (setf *signal* :text)))
+     (gobject:g-signal-connect button-raster-image "clicked" (lambda (w) (declare (ignore w)) 
+								  (setf *x* 0 *y* 0)
+								  (setf *end* 0)
+								  (setf *signal* :raster-image)))
      (gobject:g-signal-connect button-break "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-erase "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-explode "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
@@ -390,13 +418,19 @@
      (gobject:g-signal-connect button-horiz "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-leader "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
      (gobject:g-signal-connect button-vert "clicked" (lambda (w) (declare (ignore w)) (coming-soon-window)))
-     (gobject:g-signal-connect menuitem-about "activate" (lambda (w) (declare (ignore w)) (cb-about app)))
+  ;   (gobject:g-signal-connect menuitem-about "activate" (lambda (w) (declare (ignore w)) (cb-about (app-main-window app))))
      (gobject:g-signal-connect menuitem-editor "activate" (lambda (w) (declare (ignore w)) (code-editor (app-main-window app))))
      (gobject:g-signal-connect menuitem-osnap "activate" (lambda (b) (declare (ignore b)) (osnap-window (app-main-window app))))
      (gobject:g-signal-connect menuitem-fullscreen "activate" (lambda (b) (declare (ignore b))
 								      (if (equal full-window nil)
 									  (progn (gtk-window-fullscreen (app-main-window app)) (setf full-window t))
 									  (progn (gtk-window-unfullscreen (app-main-window app)) (setf full-window nil)))))
+     (gobject:g-signal-connect line-type-combo "changed" (lambda (c)
+							   (declare (ignore c))
+							   (line-type-select line-type-combo)))
+     (gobject:g-signal-connect line-width-combo "changed" (lambda (c)
+							   (declare (ignore c))
+							   (line-width-select line-width-combo)))
      (widget-show (app-main-window app))
      (push :pointer-motion-mask (gdk-window-events (widget-window draw-area)))
      (push :scroll-mask (gdk-window-events (widget-window draw-area)))
@@ -405,7 +439,25 @@
 
 (export 'main)
 
-
+(defun line-type-select (line-type-combo)
+  (cond 
+    ((equal (combo-box-active line-type-combo) 0) (setf *line-type* :continious))
+    ((equal (combo-box-active line-type-combo) 1) (setf *line-type* :dashed))
+    ((equal (combo-box-active line-type-combo) 2) (setf *line-type* :dashed-small))
+    ((equal (combo-box-active line-type-combo) 3) (setf *line-type* :dashed-big))
+    ((equal (combo-box-active line-type-combo) 4) (setf *line-type* :dot))
+    ((equal (combo-box-active line-type-combo) 5) (setf *line-type* :dot-small))
+    ((equal (combo-box-active line-type-combo) 6) (setf *line-type* :dot-big))))
+    
+(defun line-width-select (line-width-combo)
+  (cond 
+    ((equal (combo-box-active line-width-combo) 0) (setf *current-width* 0))
+    ((equal (combo-box-active line-width-combo) 1) (setf *current-width* 0.5))
+    ((equal (combo-box-active line-width-combo) 2) (setf *current-width* 1))
+    ((equal (combo-box-active line-width-combo) 3) (setf *current-width* 1.5))
+    ((equal (combo-box-active line-width-combo) 4) (setf *current-width* 2))
+    ((equal (combo-box-active line-width-combo) 5) (setf *current-width* 2.5))
+    ((equal (combo-box-active line-width-combo) 6) (setf *current-width* 3))))
 
 (defun main-and-quit ()
   (main)

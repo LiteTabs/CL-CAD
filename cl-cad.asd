@@ -22,7 +22,9 @@
 	       (:file "cl-cad.layers")
 	       (:file "cl-cad.input")
 	       (:file "cl-cad.editor")
+	       (:file "cl-cad.export")
 	       (:file "cl-cad.screen")
+	       (:file "cl-cad.version")
 	       (:file "cl-cad.main"))
   :depends-on (:cl-gtk2-glib 
 	       :cffi

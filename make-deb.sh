@@ -12,12 +12,26 @@ case `uname -m` in
 	exit 1
 esac
 
-DATE=`date -R`
-#VERSION=`date +0.%-y.%-m.%-d`
-VERSION=`date +0.1`
-PREFIX=deb/cl-cad
+while read line
+do
+    case "$line" in
+	*\*ps-version\**)
+	    VERSION=${line#*\"}
+	    VERSION=${VERSION%%\"*}
+	;;
+    esac
+done < cl-cad.version.lisp
+if [ -z "$VERSION" ]
+then
+    echo "Can't parse version"
+    exit
+fi
 
-#rm -rf deb
+DATE=`date -R`
+
+PREFIX=deb
+
+rm -rf $PREFIX
 mkdir -p $PREFIX/usr/bin
 cp cl-cad $PREFIX/usr/bin/
 cp -aR share $PREFIX/usr/
@@ -36,26 +50,28 @@ echo "Categories=Utility;"                  >> $PREFIX/usr/share/applications/cl
 echo "StartupNotify=true"                   >> $PREFIX/usr/share/applications/cl-cad.desktop
 echo "MimeType=application/x-revelation;"   >> $PREFIX/usr/share/applications/cl-cad.desktop
 
-mkdir -p $PREFIX/DEBIAN
+D=DEBIAN
+mkdir -p $PREFIX/$D
 
-echo "Package: cl-cad"                                 > $PREFIX/DEBIAN/control
-echo "Version: $VERSION"                               >> $PREFIX/DEBIAN/control
-echo "Maintainer: Burdukov Denis <litetabs@gmail.com>" >> $PREFIX/DEBIAN/control
-echo "Architecture: $ARCH"                             >> $PREFIX/DEBIAN/control
-echo "Description: Simple CAD program"                 >> $PREFIX/DEBIAN/control
-echo "Depends: libgtk2.0-0 (>= 2.16)"                  >> $PREFIX/DEBIAN/control
+echo "Package: cl-cad"                                 > $PREFIX/$D/control
+echo "Version: $VERSION"                               >> $PREFIX/$D/control
+echo "Maintainer: Burdukov Denis <litetabs@gmail.com>" >> $PREFIX/$D/control
+echo "Architecture: $ARCH"                             >> $PREFIX/$D/control
+echo "Section: misc"                                   >> $PREFIX/$D/control
+echo "Priority: optional"                              >> $PREFIX/$D/control
+echo "Description: Simple CAD program"                 >> $PREFIX/$D/control
+echo "Depends: libc6, libgtk2.0-0 (>= 2.18)"           >> $PREFIX/$D/control
 
-echo "cl-cad ($VERSION) stable; urgency=medium"     > $PREFIX/DEBIAN/changelog
-echo ""                                             >> $PREFIX/DEBIAN/changelog
-echo "* dummy."                                     >> $PREFIX/DEBIAN/changelog
-echo ""                                             >> $PREFIX/DEBIAN/changelog
-echo "-- Burdukov Denis <litetabs@gmail.com> $DATE" >> $PREFIX/DEBIAN/changelog
+echo "cl-cad ($VERSION) stable; urgency=medium"     > $PREFIX/usr/share/doc/cl-cad/changelog
+echo ""                                             >> $PREFIX/usr/share/doc/cl-cad/changelog
+echo "* dummy."                                     >> $PREFIX/usr/share/doc/cl-cad/changelog
+echo ""                                             >> $PREFIX/usr/share/doc/cl-cad/changelog
+echo "-- Burdukov Denis <litetabs@gmail.com> $DATE" >> $PREFIX/usr/share/doc/cl-cad/changelog
+echo ""                                             >> $PREFIX/usr/share/doc/cl-cad/changelog
 
-chown -R root:root $PREFIX/
+gzip -9 $PREFIX/usr/share/doc/cl-cad/changelog
 
-cd deb
-dpkg-deb -z9 -Zlzma --build cl-cad
-cd ..
-cp deb/cl-cad.deb cl-cad_${VERSION}_${ARCH}.deb
-rm -rf deb
+fakeroot dpkg-deb -Zbzip2 -z9 --build $PREFIX .
+#  -z9 -Zxz
+rm -rf $PREFIX
 

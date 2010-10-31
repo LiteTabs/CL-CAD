@@ -1,32 +1,79 @@
 (in-package :cl-cad)
 
-;(defun get-point-coordinates ()
-;  (if (<= (get-delta) *osnap-area-delta*)
-;      ;получение координат от привязки
-;      (get-snap-coordinates)
-;      ;получение координат от курсора
-;      (setf *x* x2
-;	    *y* y2)))
+(defun coordinate-light (x y)
+  (set-source-rgb (color-gtk-to-cairo (color-red (config-osnap-color *config*)))
+		  (color-gtk-to-cairo (color-green (config-osnap-color *config*)))
+		  (color-gtk-to-cairo (color-blue (config-osnap-color *config*))))
+  (set-line-width 1)
+  (move-to (- x 4) (- y 4))
+  (line-to (- x 4) (+ y 4))
+  (line-to (+ x 4) (+ y 4))
+  (line-to (+ x 4) (- y 4))
+  (line-to (- x 4) (- y 4))
+  (stroke))
+
+(defun get-snap-length (x y)
+  (sqrt
+   (+
+    (* (- x *current-x*)
+       (- x *current-x*))
+    (* (- y *current-y*)
+       (- y *current-y*)))))
 
 (defun get-snap-coordinates ()
-  ;не хватает проверки на дистанцию и сходки консов в списки
-  (if (equal *osnap-center* t) (dolist (cd *current-draw*) (cond ((equal (getf cd :title) "circle")
-							       (print (cons (getf cd :x1) (getf cd :y1))))
-							      ((equal (getf cd :title) "arc")
-							       (print (cons (getf cd :x1) (getf cd :y1))))
-							      ((equal (getf cd :title) "ellipse")
-							       (print (cons (getf cd :x1) (getf cd :y1)))))))
-  (if (equal *osnap-end* t) (dolist (cd *current-draw*) (cond ((equal (getf cd :title) "line")
-							       (print (cons (getf cd :x1) (getf cd :y1)))
-							       (print (cons (getf cd :x2) (getf cd :y2)))))))
-  (if (equal *osnap-insert* t) (dolist (cd *current-draw*) (cond ((equal (getf cd :title) "block")
-								  (print (cons (getf cd :x1) (getf cd :y1)))))))
+  (dolist (cd *current-draw*) 
+    (if (equal *osnap-center* t) 
+	(cond ((equal (getf cd :title) :circle)
+	       (coordinate-light (* *scroll-units* (getf cd :x1)) (* *scroll-units* (getf cd :y1)))
+	       (if (>= *osnap-area-delta* (get-snap-length (* *scroll-units* (getf cd :x1)) (* *scroll-units* (getf cd :y1))))
+		   (progn
+		     (move-to (* *scroll-units* (getf cd :x1)) (* *scroll-units* (getf cd :y1)))
+		     (line-to *current-x* *current-y*)
+		     (stroke))))))))
+;    (if (equal *osnap-end* t) 
+;	(cond 
+;	  ((equal (getf cd :title) :line) (
+	       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;  (if (equal *osnap-insert* t) (dolist (cd *current-draw*) (cond ((equal (getf cd :title) "block")
+;								  (print (cons (getf cd :x1) (getf cd :y1)))))))
 ;  (if (equal *osnap-intersection* t) (lambda ()))
-  (if (equal *osnap-midpoint* t) (dolist (cd *current-draw*) (cond ((equal (getf cd :title) "line")
-								    (print (cons (/ (+ (getf cd :x1) (getf cd :x2)) 2) (/ (+ (getf cd :y1) (getf cd :y2)) 2)))))))
+;  (if (equal *osnap-midpoint* t) (dolist (cd *current-draw*) (cond ((equal (getf cd :title) "line")
+;								    (print (cons (/ (+ (getf cd :x1) (getf cd :x2)) 2) (/ (+ (getf cd :y1) (getf cd :y2)) 2)))))))
 ;  (if (equal *osnap-nearest* t) (lambda ()))
-  (if (equal *osnap-point* t) (dolist (cd *current-draw*) (cond ((equal (getf cd :title) "point")
-								  (print (cons (getf cd :x1) (getf cd :y1))))))))
+;  (if (equal *osnap-point* t) (dolist (cd *current-draw*) (cond ((equal (getf cd :title) "point")
+;								  (print (cons (getf cd :x1) (getf cd :y1))))))))
  ; (if (equal *osnap-perpendicular* t) (lambda ()))
  ; (if (equal *osnap-quadrant* t) (lambda ()))
  ; (if (equal *osnap-tangent* t) (lambda ()))

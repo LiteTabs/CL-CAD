@@ -13,6 +13,7 @@
     ((equal *signal* :point) (input-for-point))
     ((equal *signal* :rectangle) (input-for-rectangle))
     ((equal *signal* :text) (input-for-text))
+    ((equal *signal* :raster-image) (input-for-raster-image))
     ))
 
 (defun get-coord-angle ()
@@ -45,6 +46,7 @@
        *y*))
   (line-to *current-x* *current-y*)
   (stroke)
+  (get-snap-coordinates)
 ;  (set-source-rgb 0 0 0)
 ;  (move-to *x* *y*)
 ;  (line-to *x* (- *y* 20))
@@ -216,3 +218,6 @@
 	  (progn 
 	    (add-text *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 *text-buffer-count* *current-font* 0 *current-color*)
 	    (setf *text-buffer-count* nil *x* 0 *y* 0 *end* 0)))))
+
+(defun input-for-raster-image ())
+  
