@@ -7,6 +7,7 @@
   (cond
     ((equal *signal* :line) (input-for-line))
     ((equal *signal* :circle) (input-for-circle))
+    ((equal *signal* :circle-diameter) (input-for-circle-diameter))
     ((equal *signal* :arc) (input-for-arc))
     ((equal *signal* :continious) (input-for-continious))
     ((equal *signal* :ray) (input-for-ray))
@@ -93,6 +94,41 @@
   (if (equal *end* 2)
       (progn
 	(add-circle "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ (get-coord-length) *scroll-units*) *line-type* 1  *current-color* *current-width*)
+	(setf *x* 0 *y* 0)
+	(setf *end* 0))))
+
+(defun input-for-circle-diameter ()
+  (set-source-rgb 1 0 0)
+  (set-line-width 0.5)
+  (arc (if (equal *x* 0) 
+	   *current-x*
+	   (* 0.5 (+ *current-x* *x*)))
+       (if (equal *y* 0) 
+	   *current-y*
+	   (* 0.5 (+ *current-y* *y*)))
+       (if (equal *end* 0)
+	   0
+	   (* 0.5 (get-coord-length)))
+       0 (* 2 pi))
+  (stroke)
+  (set-source-rgb 1 0 0)
+  (move-to (+ *x* 5) *y*)
+  (line-to (- *x* 5) *y*)
+  (move-to *x* (+ *y* 5))
+  (line-to *x* (- *y* 5))
+  (stroke)
+  (set-fantom-color)
+  (move-to (if (equal *x* 0) 
+	       *current-x*
+	       *x*)
+	   (if (equal *y* 0) 
+	       *current-y*
+	       *y*))
+  (line-to *current-x* *current-y*)
+  (stroke)
+  (if (equal *end* 2)
+      (progn
+	(add-circle "0" (/ (* 0.5 (+ *current-x* *x*)) *scroll-units*) (/ (* 0.5 (+ *current-y* *y*)) *scroll-units*) 0 (/ (* 0.5 (get-coord-length)) *scroll-units*) *line-type* 1  *current-color* *current-width*)
 	(setf *x* 0 *y* 0)
 	(setf *end* 0))))
 
@@ -205,11 +241,11 @@
 (defun input-for-text ()
   (set-source-rgb 1 0 0)
   (move-to (if (equal *x* 0) 
-		 *current-x*
-		 *x*)
-	     (if (equal *y* 0) 
-		 *current-y*
-		 *y*))
+	       *current-x*
+	       *x*)
+	   (if (equal *y* 0) 
+	       *current-y*
+	       *y*))
   (show-text *text-buffer-count*)
   (stroke)
   (if (equal *end* 1)
@@ -219,5 +255,13 @@
 	    (add-text *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 *text-buffer-count* *current-font* 0 *current-color*)
 	    (setf *text-buffer-count* nil *x* 0 *y* 0 *end* 0)))))
 
-(defun input-for-raster-image ())
+(defun input-for-raster-image ()
+  (set-source-rgb 1 0 0)
+  (translate  (if (equal *x* 0) 
+		  *current-x*
+		  *x*)
+	      (if (equal *y* 0) 
+		  *current-y*
+		  *y*)))
+  
   

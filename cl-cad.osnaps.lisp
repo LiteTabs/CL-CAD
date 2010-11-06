@@ -29,10 +29,12 @@
 		   (progn
 		     (move-to (* *scroll-units* (getf cd :x1)) (* *scroll-units* (getf cd :y1)))
 		     (line-to *current-x* *current-y*)
-		     (stroke))))))))
-;    (if (equal *osnap-end* t) 
-;	(cond 
-;	  ((equal (getf cd :title) :line) (
+		     (stroke))))))
+    (if (equal *osnap-end* t) 
+	(cond ((equal (getf cd :title) :line)
+	       (coordinate-light (* *scroll-units* (getf cd :x1)) (* *scroll-units* (getf cd :y1)))
+	       (coordinate-light (* *scroll-units* (getf cd :x2)) (* *scroll-units* (getf cd :y2))))))))
+	       
 	       
 
 

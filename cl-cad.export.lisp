@@ -1,17 +1,52 @@
 (in-package :cl-cad)
 
-(defun cb-save-export ( w h)
-  (let ((dlg (make-instance 'gtk:file-chooser-dialog
-                            :action :save
-                            :title "Export file"
-                            :window-position :center-on-parent)))
-                           ; :transient-for (app-main-window app))))
+(defstruct export-type type extention)
+(defvar *export-type* :png)
+
+(defun cb-export (app)
+  (let* ((model (make-instance 'array-list-store))
+	 (combo (make-instance 'combo-box :model model))
+	 (dlg (make-instance 'gtk:file-chooser-dialog
+			     :action :save
+			     :title "Export file"
+			     :extra-widget combo
+			     :window-position :center-on-parent
+			     :transient-for app)))
     (gtk:dialog-add-button dlg "gtk-cancel" :cancel)
     (gtk:dialog-add-button dlg "gtk-save" :ok)
     (gtk:set-dialog-alternative-button-order dlg (list :ok :cancel))
     (setf (gtk:dialog-default-response dlg) :ok)
-    (when (eq (std-dialog-run dlg) :ok)
-      (export-to-png (gtk:file-chooser-filename dlg) w h))))
+    (store-add-column model "gchararray" #'export-type-type)
+    (store-add-column model "gchararray" #'export-type-extention)
+    (store-add-item model (make-export-type :type "Portable network graphic" :extention ".png"))
+    (store-add-item model (make-export-type :type "Scalable vector graphic" :extention ".svg"))
+    (store-add-item model (make-export-type :type "PostScriptc" :extention ".ps"))
+    (store-add-item model (make-export-type :type "Portable document format"  :extention ".pdf"))
+    (let ((renderer (make-instance 'cell-renderer-text :text "A text")))
+      (cell-layout-pack-start combo renderer :expand t)
+      (cell-layout-add-attribute combo renderer "text" 0))
+    (let ((renderer (make-instance 'cell-renderer-text :text "A number")))
+      (cell-layout-pack-start combo renderer :expand nil)
+      (cell-layout-add-attribute combo renderer "text" 1))
+    (gobject:g-signal-connect combo "changed" (lambda (c)
+						  (declare (ignore c))
+						  (export-type-select combo)))
+    (when (std-dialog-run dlg)
+      (export-action (gtk:file-chooser-filename dlg) 1024 768))))
+
+(defun export-type-select (combo)
+  (cond 
+    ((equal (combo-box-active combo) 0) (setf *export-type* :png))
+    ((equal (combo-box-active combo) 1) (setf *export-type* :svg))
+    ((equal (combo-box-active combo) 2) (setf *export-type* :ps))
+    ((equal (combo-box-active combo) 3) (setf *export-type* :pdf))))
+
+(defun export-action (filename w h)
+  (cond
+    ((equal *export-type* :png) (export-to-png filename w h))
+    ((equal *export-type* :svg) (export-to-svg filename w h))
+    ((equal *export-type* :ps) (export-to-ps filename w h))
+    ((equal *export-type* :pdf) (export-to-pdf filename w h))))
 
 (defun export-to-png (name-file w h)
   (with-png-file (name-file :rgb24 w h)
