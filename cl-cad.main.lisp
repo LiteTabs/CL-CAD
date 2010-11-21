@@ -100,6 +100,12 @@
   (setf *x* 0 *y* 0)
   (setf *signal* type))
 
+(defun screen-displacement ()
+  (setf *screen-units-x* (+  *screen-units-x* (- *x4* *x3*)))
+  (setf *screen-units-y* (+  *screen-units-y* (- *y4* *y3*))))
+
+(defvar *scroll-push* nil)
+
 (defun main ()
   (load-config)
   (within-main-loop
@@ -331,13 +337,16 @@
 								(declare (ignore widget))
 								(cond
 								  ((= 1 (gdk:event-button-button event)) (if (equal *end* 0) (setf *x* (round *current-x*) *y* (round *current-y*))))
-								  ((= 2 (gdk:event-button-button event)) (setf *end* 0) (setf *x3* (round *current-x*) *y3* (round *current-y*)))
-								  ((= 3 (gdk:event-button-button event)) (setf *end* 0) (coming-soon-window)))
+								  ((= 2 (gdk:event-button-button event)) 
+								   (setf *x3* (round *current-x*) *y3* (round *current-y*) *scroll-push* t *end* 0)) 
+								  ((= 3 (gdk:event-button-button event)) (coming-soon-window)))
 								(setf *end* (1+ *end*))
 								(widget-queue-draw draw-area)))
      (gobject:g-signal-connect draw-area "button-release-event" (lambda (object event)
 								  (declare (ignore object event))
-								  (setf *x4* (round *current-x*) *y4* (round *current-y*))))
+								  (setf *x4* (round *current-x*) *y4* (round *current-y*))
+								  (if (equal *scroll-push* t) (screen-displacement))
+								  (setf *scroll-push* nil)))
      (gobject:g-signal-connect draw-area "scroll-event" (lambda (object event)
 								 (declare (ignore object))
 								  (if (equal (gdk:event-scroll-direction event) :UP)
