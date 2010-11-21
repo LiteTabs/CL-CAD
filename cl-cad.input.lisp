@@ -58,8 +58,26 @@
 ;  (stroke)
   (if (equal *end* 2)
    (progn 
-     (add-line *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0 *line-type* 1 *current-color* *current-width*)
-     (setf *x* 0 *y* 0)
+     (add-line *current-layer* 
+	       (if (equal *snap-x* nil)
+		   (/ *x* *scroll-units*)
+		   *snap-x*)
+	       (if (equal *snap-y* nil)
+		   (/ *y* *scroll-units*)
+		   *snap-y*)
+	       0 
+	       (if (equal *snap-x* nil)
+		   (/ *current-x* *scroll-units*)
+		   *snap-x*)
+	       (if (equal *snap-y* nil)
+		   (/ *current-y* *scroll-units*) 
+		   *snap-y*)
+	       0 
+	       *line-type* 
+	       1 
+	       *current-color* 
+	       *current-width*)
+     (setf *x* 0 *y* 0 *snap-x* nil *snap-y* nil)
      (setf *end* 0))))
 
 (defun input-for-circle ()

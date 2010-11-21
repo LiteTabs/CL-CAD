@@ -33,6 +33,8 @@
 (defvar *length* 0)
 (defvar *current-x* nil)
 (defvar *current-y* nil)
+(defvar *snap-x* nil)
+(defvar *snap-y* nil)
 
 (defparameter *osnap-area-delta* 10)
 (defparameter *osnap-center* nil)

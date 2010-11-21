@@ -173,5 +173,14 @@
 				  (declare (ignore widget))
 				  (setf *text-buffer-count* (entry-text entry))
 				  (object-destroy window)))
+      (gobject:g-signal-connect window "key-press-event" 
+				(lambda (widget event)
+				  (declare (ignore widget))
+				  (if (equal (event-key-keyval event) 65293)
+				      (progn
+					(setf *text-buffer-count* (or (entry-text entry) ""))
+					(leave-gtk-main)))))
       (widget-show window))))
 
+(defun key-grabber ())
+  

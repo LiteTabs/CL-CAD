@@ -127,7 +127,7 @@
   (color-parser cd)
   (move-to (* *scroll-units* (getf cd :x1))
 	   (* *scroll-units* (getf cd :y1)))
-  (select-font-face (getf cd :style))
+ ; (select-font-face (getf cd :style))
   (show-text (getf cd :count))
   (stroke))
 
