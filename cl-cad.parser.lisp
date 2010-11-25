@@ -128,6 +128,8 @@
   (move-to (* *scroll-units* (getf cd :x1))
 	   (* *scroll-units* (getf cd :y1)))
  ; (select-font-face (getf cd :style))
+  (select-font-face "Arial" :italic :bold)
+  (set-font-size (/ *scroll-units* 12))
   (show-text (getf cd :count))
   (stroke))
 
@@ -157,10 +159,10 @@
   (restore))
   
 (defun parser-raster-image (cd)
-  (save)
   (let* ((image (image-surface-create-from-png (getf cd :path)))
 	 (image-width (image-surface-get-width image))
 	 (image-height (image-surface-get-height image)))
+    (save)
     (translate (* *scroll-units* (getf cd :x1)) 
 	       (* *scroll-units* (getf cd :y1)))
     (rotate (* (getf cd :rotation-angle) (* pi 180)))
@@ -168,7 +170,21 @@
     (translate (* -0.5 image-width) (* -0.5 image-height))
     (set-source-surface image 0 0)
     (paint)
-    (restore)))
+    (destroy image)))
+
+;(defun parser-raster-image (cd)
+;  (save)
+;  (let* ((image (image-surface-create-from-png (getf cd :path)));
+;	 (image-width (image-surface-get-width image))
+;	 (image-height (image-surface-get-height image)))
+;    (translate (* *scroll-units* (getf cd :x1)) ;
+;	       (* *scroll-units* (getf cd :y1)))
+ ;   (rotate (* (getf cd :rotation-angle) (* pi 180)))
+  ;  (scale (* *scroll-units* (/ (getf cd :scale) image-width)) (* *scroll-units* (/ (getf cd :scale) image-height)))
+   ; (translate (* -0.5 image-width) (* -0.5 image-height))
+   ; (set-source-surface image 0 0)
+   ; (paint)
+   ; (restore)))
 
 (defun parser-rectangle (cd)
   (save)

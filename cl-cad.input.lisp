@@ -59,26 +59,25 @@
   (if (equal *end* 2)
    (progn 
      (add-line *current-layer* 
-	       (if (equal *snap-x* nil)
+	       (if (equal *snap-x1* 0)
 		   (/ *x* *scroll-units*)
-		   *snap-x*)
-	       (if (equal *snap-y* nil)
+		   *snap-x1*)
+	       (if (equal *snap-y1* 0)
 		   (/ *y* *scroll-units*)
-		   *snap-y*)
+		   *snap-y1*)
 	       0 
-	       (if (equal *snap-x* nil)
+	       (if (equal *snap-x2* 0)
 		   (/ *current-x* *scroll-units*)
-		   *snap-x*)
-	       (if (equal *snap-y* nil)
+		   *snap-x2*)
+	       (if (equal *snap-y2* 0)
 		   (/ *current-y* *scroll-units*) 
-		   *snap-y*)
+		   *snap-y2*)
 	       0 
 	       *line-type* 
 	       1 
 	       *current-color* 
 	       *current-width*)
-     (setf *x* 0 *y* 0 *snap-x* nil *snap-y* nil)
-     (setf *end* 0))))
+     (setf *end* 0 *snap-distance* 500 *snap-x1* 0 *snap-y1* 0 *snap-x2* 0 *snap-y2* 0 *x* 0 *y* 0))))
 
 (defun input-for-circle ()
   (set-source-rgb 1 0 0)
@@ -271,7 +270,7 @@
 	  (setf *end* 0)
 	  (progn 
 	    (add-text *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 *text-buffer-count* *current-font* 0 *current-color*)
-	    (setf *text-buffer-count* nil *x* 0 *y* 0 *end* 0)))))
+	    (setf *text-buffer-count* "" *x* 0 *y* 0 *end* 0)))))
 
 (defun input-for-raster-image ()
   (set-source-rgb 1 0 0)

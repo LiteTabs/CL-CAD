@@ -31,8 +31,17 @@
     (gobject:g-signal-connect combo "changed" (lambda (c)
 						  (declare (ignore c))
 						  (export-type-select combo)))
-    (when (std-dialog-run dlg)
-      (export-action (gtk:file-chooser-filename dlg) 1024 768))))
+    (g-signal-connect dlg "cancel" (lambda (dialog1 response-id)
+				     (declare (ignore dialog1 response-id))
+				     (object-destroy dlg)))
+    (g-signal-connect dlg "ok" (lambda (dialog1 response-id)
+				 (declare (ignore dialog1 response-id))
+				 (export-action (gtk:file-chooser-filename dlg) 1024 768)
+				 (object-destroy dlg)))
+    (gtk:widget-show dlg :all t)))
+;    (prog1
+;	(eql (gtk:dialog-run dlg) :ok)
+ ;     (gtk:widget-hide dlg))))
 
 (defun export-type-select (combo)
   (cond 

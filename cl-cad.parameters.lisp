@@ -9,13 +9,6 @@
 (defparameter *current-width* 1)
 (defvar *current-font* "Sans 10")
 (defvar *text-buffer-count* "")
-(defparameter *week-day-names* '("Monday" 
-				 "Tuesday"
-				 "Wednesday"
-				 "Fhursday" 
-				 "Friday" 
-				 "Saturday" 
-				 "Sunday"))
 (defvar *grid-step* 5)
 
 (defvar *x* nil)
@@ -33,8 +26,6 @@
 (defvar *length* 0)
 (defvar *current-x* nil)
 (defvar *current-y* nil)
-(defvar *snap-x* nil)
-(defvar *snap-y* nil)
 (defvar *screen-units-x* 0)
 (defvar *screen-units-y* 0)
 
