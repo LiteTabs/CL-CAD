@@ -166,6 +166,14 @@
 	      :show-clipped show-clipped 
 	      :transparency transparency) *current-draw*))
 
+(defun add-hatch (layer x1 y1 z1 type)
+  (push (list :title :hatch
+	      :layer layer
+	      :x1 x1 
+	      :y1 y1 
+	      :z1 z1
+	      :type type) *current-draw*))
+
 (defun save-data (filename)
 	(with-open-file (out filename 
 			     :direction 

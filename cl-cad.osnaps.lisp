@@ -18,6 +18,28 @@
   (line-to (- x 4) (- y 4))
   (stroke))
 
+(defun coordinate-light-cross (x y)
+  (set-source-rgb (color-gtk-to-cairo (color-red (config-osnap-color *config*)))
+		  (color-gtk-to-cairo (color-green (config-osnap-color *config*)))
+		  (color-gtk-to-cairo (color-blue (config-osnap-color *config*))))
+  (set-line-width 1)
+  (move-to (- x 5) y)
+  (line-to (+ x 5) y)
+  (move-to x (+ y 5))
+  (line-to x (- y 5))
+  (stroke))
+
+(defun coordinate-light-triangle (x y)
+  (set-source-rgb (color-gtk-to-cairo (color-red (config-osnap-color *config*)))
+		  (color-gtk-to-cairo (color-green (config-osnap-color *config*)))
+		  (color-gtk-to-cairo (color-blue (config-osnap-color *config*))))
+  (set-line-width 1)
+  (move-to x (- y 5))
+  (line-to (- x 5) (+ y 5))
+  (line-to (+ x 5) (+ y 5))
+  (line-to x (- y 5))
+  (stroke))
+
 (defun get-snap-length (x y)
   (sqrt
    (+
@@ -32,7 +54,7 @@
 	     (if (>= *osnap-area-delta* (get-snap-length (* *scroll-units* (getf cd :x1)) 
 							 (* *scroll-units* (getf cd :y1))))
 		 (progn
-		   (coordinate-light-square (* *scroll-units* (getf cd :x1)) 
+		   (coordinate-light-cross (* *scroll-units* (getf cd :x1)) 
 					    (* *scroll-units* (getf cd :y1)))
 		   (if (> *snap-distance* (get-snap-length (* *scroll-units* (getf cd :x1)) 
 							   (* *scroll-units* (getf cd :y1))))
@@ -61,10 +83,10 @@
 							 (* *scroll-units* (/ (+ (getf cd :y2) 
 										 (getf cd :y1)) 2))))
 		 (progn
-		   (coordinate-light-square (* *scroll-units* (/ (+ (getf cd :x2) 
-								    (getf cd :x1)) 2))
-					    (* *scroll-units* (/ (+ (getf cd :y2) 
-								    (getf cd :y1)) 2)))))))))
+		   (coordinate-light-triangle (* *scroll-units* (/ (+ (getf cd :x2) 
+								      (getf cd :x1)) 2))
+					      (* *scroll-units* (/ (+ (getf cd :y2) 
+								      (getf cd :y1)) 2)))))))))
 
 (defun get-insert-coordinates (cd)
   (if (equal *osnap-insert* t) 
@@ -72,8 +94,8 @@
 	     (if (>= *osnap-area-delta* (get-snap-length (* *scroll-units* (getf cd :x1)) 
 							 (* *scroll-units* (getf cd :y1))))
 		 (progn
-		   (coordinate-light-square (* *scroll-units* (getf cd :x1)) 
-					    (* *scroll-units* (getf cd :y1)))))))))
+		   (coordinate-light-cross (* *scroll-units* (getf cd :x1)) 
+					   (* *scroll-units* (getf cd :y1)))))))))
 
 (defun get-quadrant-coordinates (cd)
   (if (equal *osnap-quadrant* t) 
