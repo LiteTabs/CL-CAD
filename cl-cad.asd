@@ -27,6 +27,7 @@
 	       (:file "cl-cad.version")
 	       (:file "cl-cad.printing")
 	       (:file "cl-cad.hatch")
+               (:file "cl-cad.undo-redo")
 	       (:file "cl-cad.main"))
   :depends-on (:cl-gtk2-glib 
 	       :cffi

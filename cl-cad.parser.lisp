@@ -121,15 +121,32 @@
  ;      0))
   (stroke))
 
+(defun gtkfont-to-cairofont (cd)
+  (car (split-by-one-space (getf cd :type))))
+;  (if (equal (cadr (split-by-one-space (getf cd :type))) "Bold")
+ ;     :bold)
+ ; (if (equal (cadr (split-by-one-space (getf cd :type))) "Italic")
+ ;     :italic)
+ ; (if (equal (caddr (split-by-one-space (getf cd :type))) "Italic")
+ ;     :italic))
+
+(defun split-by-one-space (string)
+  (loop for i = 0 then (1+ j)
+     as j = (position #\Space string :start i)
+     collect (subseq string i j)
+     while j))
 
 (defun parser-text (cd)
   (save)
   (color-parser cd)
   (move-to (* *scroll-units* (getf cd :x1))
 	   (* *scroll-units* (getf cd :y1)))
- ; (select-font-face (getf cd :style))
-  (select-font-face "Arial" :italic :bold)
-  (set-font-size (/ *scroll-units* 12))
+ ; (select-font-face "Sans");(gtkfont-to-cairofont cd))
+ ; (set-font-size 12);(/ *scroll-units*
+		  ;  (read-from-string
+		   ;  (car
+		    ;  (reverse 
+		     ;  (split-by-one-space (getf cd :style)))))))
   (show-text (getf cd :count))
   (stroke))
 
@@ -162,15 +179,14 @@
   (let* ((image (image-surface-create-from-png (getf cd :path)))
 	 (image-width (image-surface-get-width image))
 	 (image-height (image-surface-get-height image)))
-    (save)
     (translate (* *scroll-units* (getf cd :x1)) 
 	       (* *scroll-units* (getf cd :y1)))
     (rotate (* (getf cd :rotation-angle) (* pi 180)))
-    (scale (* *scroll-units* (/ (getf cd :scale) image-width)) (* *scroll-units* (/ (getf cd :scale) image-height)))
+    (scale (* *scroll-units* (/ (getf cd :scale) image-width)) 
+	   (* *scroll-units* (/ (getf cd :scale) image-height)))
     (translate (* -0.5 image-width) (* -0.5 image-height))
     (set-source-surface image 0 0)
-    (paint)
-    (destroy image)))
+    (paint)))
 
 ;(defun parser-raster-image (cd)
 ;  (save)
