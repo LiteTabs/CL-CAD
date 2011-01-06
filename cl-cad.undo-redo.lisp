@@ -4,8 +4,8 @@
 
 (defun add-action (action count)
   (push (list :action action
-	      :count count
-	      *action*)))
+	      :count count)
+	*actions*))
 
 (defun remove-action ()
   (setf *actions* (cdr *actions*)))

@@ -20,13 +20,13 @@
 (defun draw-grid (w h step)
   (if (>= *scroll-units* 4)
       (progn
-	(loop for a from 0 to h by (* *scroll-units* step) 
+	(loop for a from (+ 0 *screen-units-y*) to h by (* *scroll-units* step)
 	   do (horiz-grid a w))
-	(loop for b from 0 to w by (* *scroll-units* step)
+	(loop for b from (+ 0 *screen-units-x*) to w by (* *scroll-units* step)
 	   do (vert-grid b h))))
   (if (>= *scroll-units* 6)
-      (loop for a from 0 to w by (* *scroll-units* (/ step 5))
-	 do (loop for b from 0 to h by (* *scroll-units* (/ step 5))
+      (loop for a from (+ 0 *screen-units-x*) to w by (* *scroll-units* (/ step 5))
+	 do (loop for b from (+ 0 *screen-units-y*) to h by (* *scroll-units* (/ step 5))
 	       do (grid a b)))))
 
 (defun horiz-grid (a w)
