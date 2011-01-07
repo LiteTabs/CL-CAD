@@ -228,7 +228,7 @@
   (restore)
   (if (equal *end* 1)
       (progn 
-       (add-point *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 *current-color* 1)
+       (add-point *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 1)
        (setf *x* 0 *y* 0)
        (setf *end* 0))))
 

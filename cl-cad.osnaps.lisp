@@ -139,7 +139,9 @@
     (get-center-coordinates cd)
     (get-end-coordinates cd)
     (get-midpoint-coordinates cd)
-    (get-insert-coordinates cd)))
+    (get-quadrant-coordinates cd)
+    (get-insert-coordinates cd)
+    (get-point-coordinates cd)))
 
 (defun osnap-window (parent-window)
   (within-main-loop

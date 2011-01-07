@@ -13,9 +13,6 @@
 	      :created created 
 	      :modified modified) *current-draw*))
 
-;(defun add-sheet-properties (format hpole vpole background-color metrics space)
-;  (push (list :title :sheet-properties" :format format :hpole hpole :vpole vpole :background-color background-color :metrics metrics :space space) *current-draw*))
-
 (defun add-layer (layer-name line-type color-line width printable view)
   (push (list :title :layer 
 	      :layer-name layer-name 
@@ -126,7 +123,7 @@
 	      :count count 
 	      :rotation rotation) *current-draw*))
 
-(defun add-point (layer x1 y1 z1 color-line style)
+(defun add-point (layer x1 y1 z1 style)
   (push (list :title :point 
 	      :layer layer 
 	      :x1 x1 
