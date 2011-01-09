@@ -3,7 +3,7 @@
 (defstruct export-type type extention)
 (defvar *export-type* :png)
 
-(defun cb-export (app)
+(defun cb-export (parent-window)
   (let* ((model (make-instance 'array-list-store))
 	 (combo (make-instance 'combo-box :model model))
 	 (dlg (make-instance 'gtk:file-chooser-dialog
@@ -11,7 +11,7 @@
 			     :title "Export file"
 			     :extra-widget combo
 			     :window-position :center-on-parent
-			     :transient-for app)))
+			     :transient-for (app-main-window parent-window))))
     (gtk:dialog-add-button dlg "gtk-cancel" :cancel)
     (gtk:dialog-add-button dlg "gtk-save" :ok)
     (gtk:set-dialog-alternative-button-order dlg (list :ok :cancel))
@@ -29,20 +29,11 @@
       (cell-layout-pack-start combo renderer :expand nil)
       (cell-layout-add-attribute combo renderer "text" 1))
     (gobject:g-signal-connect combo "changed" (lambda (c)
-						  (declare (ignore c))
-						  (export-type-select combo)))
-    (g-signal-connect dlg "cancel" (lambda (dialog1 response-id)
-				     (declare (ignore dialog1 response-id))
-				     (object-destroy dlg)))
-    (g-signal-connect dlg "ok" (lambda (dialog1 response-id)
-				 (declare (ignore dialog1 response-id))
-				 (export-action (gtk:file-chooser-filename dlg) 1024 768)
-				 (object-destroy dlg)))
-    (gtk:widget-show dlg :all t)))
-;    (prog1
-;	(eql (gtk:dialog-run dlg) :ok)
- ;     (gtk:widget-hide dlg))))
-
+						(declare (ignore c))
+						(export-type-select combo)))
+    (when (std-dialog-run dlg)
+      (export-action (gtk:file-chooser-filename dlg) 1024 768))))
+	  
 (defun export-type-select (combo)
   (cond 
     ((equal (combo-box-active combo) 0) (setf *export-type* :png))

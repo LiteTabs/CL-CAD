@@ -84,18 +84,8 @@
 
 (defun std-dialog-run (dlg)
   (gtk:widget-show dlg :all t)
-  (prog1
-      (eql (gtk:dialog-run dlg) :ok)
+  (prog1 (eql (gtk:dialog-run dlg) :ok)
     (gtk:widget-hide dlg)))
-
-(defun read-text-file (file-name)
-  (with-output-to-string (str)
-    (with-open-file (file file-name)
-      (loop
-         for line = (read-line file nil nil)
-         while line
-         do (fresh-line str)
-         do (write-string line str)))))
 
 (defun coming-soon-window ()
   (within-main-loop
