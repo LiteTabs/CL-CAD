@@ -2,15 +2,14 @@
 
 (defstruct layer layer-name line-type color-line width printable view)
 
-(defun layers-window (parent-window)
+(defun layers-window ()
   (within-main-loop
     (let* ((window (make-instance 'gtk-window 
 				  :type :toplevel 
 				  :title "Layers"
+				  :window-position :center
 				  :default-width 500 
-				  :default-height 300
-				  :destroy-with-parent t
-				  :transient-for parent-window))
+				  :default-height 300))
            (model (make-instance 'array-list-store))
            (scroll (make-instance 'scrolled-window 
 				  :hscrollbar-policy :automatic 
@@ -44,10 +43,15 @@
       (setf (tree-view-model tv) model (tree-view-tooltip-column tv) 0)
       (gobject:g-signal-connect window "destroy" (lambda (w) 
 						   (declare (ignore w)) (leave-gtk-main)))
+      (gobject:g-signal-connect window "configure-event" (lambda (widget event)
+							     (declare (ignore widget event))
+							     (widget-queue-draw window)))
       (gobject:g-signal-connect close-button "clicked" (lambda (b)
                                                    (declare (ignore b)) (object-destroy window)))
       (gobject:g-signal-connect add-layer-button "clicked" (lambda (b)
-                                                   (declare (ignore b)) (add-layer-window)))
+                                                   (declare (ignore b))
+						   (object-destroy window)
+						   (add-layer-window)))
       (container-add window h-box)
       (box-pack-start h-box scroll)
       (box-pack-start h-box v-box :expand nil)
@@ -102,8 +106,9 @@
 (defun add-layer-window ()
   (within-main-loop
     (let* ((window (make-instance 'gtk-window 
-				  :type :toplevel 
-				  :title "Layers"))
+				  :type :toplevel
+				  :window-position :center
+				  :title "Add layer"))
 	   (v-box (make-instance 'v-box))
 	   (layer-name-entry (make-instance 'entry))
            (line-type-entry (make-instance 'entry))
@@ -124,7 +129,8 @@
 								  0)
 							      "yes"
 							      "yes")
-						   (object-destroy window)))
+						   (object-destroy window)
+						   (layers-window)))
       (container-add window v-box)
       (box-pack-start v-box layer-name-entry :expand nil)
       (box-pack-start v-box line-type-entry :expand nil)

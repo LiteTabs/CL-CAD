@@ -46,7 +46,9 @@
       (connect-signal window "destroy" (lambda (w) (declare (ignore w)) (leave-gtk-main)))
       (connect-signal button-ok "clicked" (lambda (w) (declare (ignore w)) (object-destroy window)))
       (connect-signal button-cancel "clicked" (lambda (w) (declare (ignore w)) (object-destroy window)))
-      (gobject:g-signal-connect combo "changed" (lambda (c) (declare (ignore c)) (hatch-type-select combo)))
+      (gobject:g-signal-connect combo "changed" (lambda (c) (declare (ignore c)) 
+							(hatch-type-select combo)
+							(widget-queue-draw window)))
       (widget-show window))))
 
 (defun hatch-type-select (combo)

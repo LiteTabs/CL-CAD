@@ -121,34 +121,60 @@
  ;      0))
   (stroke))
 
-(defun gtkfont-to-cairofont (cd)
-  (car (split-by-one-space (getf cd :type))))
-;  (if (equal (cadr (split-by-one-space (getf cd :type))) "Bold")
- ;     :bold)
- ; (if (equal (cadr (split-by-one-space (getf cd :type))) "Italic")
- ;     :italic)
- ; (if (equal (caddr (split-by-one-space (getf cd :type))) "Italic")
- ;     :italic))
-
 (defun split-by-one-space (string)
   (loop for i = 0 then (1+ j)
      as j = (position #\Space string :start i)
      collect (subseq string i j)
      while j))
 
+(defun gtkfont-to-cairofont (cd)
+  (cond ((= (length (split-by-one-space (getf cd :style))) 4)
+	 (select-font-face
+	  (car (split-by-one-space (getf cd :style)))
+	  (or
+	   (cond 
+	     ((equal (caddr (split-by-one-space (getf cd :style))) "Italic") :italic))
+	   :normal)
+	  (or
+	   (cond
+	     ((equal (cadr (split-by-one-space (getf cd :style))) "Bold") :bold))
+	   :normal)))
+
+	((= (length (split-by-one-space (getf cd :style))) 3)
+	 (if (equal (cadr (split-by-one-space (getf cd :style))) "Bold")
+	     (select-font-face
+	      (car (split-by-one-space (getf cd :style)))
+	      :normal
+	      :bold)
+	     (select-font-face
+	      (car (split-by-one-space (getf cd :style)))
+	      :italic
+	      :normal)))
+	      
+	((= (length (split-by-one-space (getf cd :style))) 2)
+	 (select-font-face
+	  (car (split-by-one-space (getf cd :style)))
+	  :normal
+	  :normal))))
+	      
+	      
+	      
+   
+
 (defun parser-text (cd)
   (save)
   (color-parser cd)
-  (move-to (* *scroll-units* (getf cd :x1))
-	   (* *scroll-units* (getf cd :y1)))
- ; (select-font-face "Sans");(gtkfont-to-cairofont cd))
- ; (set-font-size 12);(/ *scroll-units*
-		  ;  (read-from-string
-		   ;  (car
-		    ;  (reverse 
-		     ;  (split-by-one-space (getf cd :style)))))))
+  (move-to (+ *screen-units-x* (* *scroll-units* (getf cd :x1)))
+	   (+ *screen-units-y* (* *scroll-units* (getf cd :y1))))
+  (gtkfont-to-cairofont cd)
+  (set-font-size (* *scroll-units*
+		    (parse-integer 
+		     (car
+		      (reverse 
+		       (split-by-one-space (getf cd :style)))))))
   (show-text (getf cd :count))
-  (stroke))
+  (stroke)
+  (restore))
 
 ;(defun parser-block ()
 
