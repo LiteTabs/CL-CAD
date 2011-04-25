@@ -407,8 +407,7 @@
      (push :pointer-motion-mask (gdk-window-events (widget-window draw-area)))
      (push :scroll-mask (gdk-window-events (widget-window draw-area)))
      (push :button-press-mask (gdk-window-events (widget-window draw-area)))
-     (push :button-release-mask (gdk-window-events (widget-window draw-area)))))
-  (save-config))
+     (push :button-release-mask (gdk-window-events (widget-window draw-area))))))
 
 (export 'main)
 

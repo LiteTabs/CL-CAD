@@ -18,9 +18,41 @@
     ))
 
 (defun get-coord-angle ()
-  (* (atan (/ (- *current-y* *y*)
-	      (- *current-x* *x*)))
-     (/ 180 pi)))
+  (cond
+   ((> *current-x* *x*)
+    (cond
+     ((> *current-y* *y*)
+      (* (atan (/ (- *current-y* *y*)
+		  (- *current-x* *x*)))
+	 (/ 180 pi)))
+     ((< *current-y* *y*)
+      (* (atan (/ (- *current-y* *y*)
+		  (- *current-x* *x*)))
+	 (/ 180 pi)))
+     ((= *current-y* *y*)
+      0)))
+   ((< *current-x* *x*)
+    (cond
+     ((> *current-y* *y*)
+      (- (* (atan (/ (- *current-y* *y*)
+		     (- *current-x* *x*)))
+	       (/ 180 pi)) 
+	 180))
+     ((< *current-y* *y*)
+      (+ (* (atan (/ (- *current-y* *y*)
+		     (- *current-x* *x*)))
+	    (/ 180 pi))
+	 180))
+     ((= *current-y* *y*)
+      180)))
+   ((= *current-x* *x*)
+    (cond
+     ((> *current-y* *y*)
+      90)
+     ((< *current-y* *y*)
+      270)
+     ((= *current-y* *y*)
+      0)))))
 
 (defun get-coord-length ()
   (sqrt
@@ -48,14 +80,6 @@
   (line-to *current-x* *current-y*)
   (stroke)
   (get-snap-coordinates)
-;  (set-source-rgb 0 0 0)
-;  (move-to *x* *y*)
-;  (line-to *x* (- *y* 20))
-;  (move-to *current-x* *current-y*)
-;  (line-to *current-x* (- *current-y* 20))
-;  (move-to *x* (- *y* 17))
-;  (line-to *current-x* (- *current-y* 17))
-;  (stroke)
   (if (equal *end* 2)
    (progn 
      (add-line *current-layer* 
@@ -110,7 +134,16 @@
   (stroke)
   (if (equal *end* 2)
       (progn
-	(add-circle "0" (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ (get-coord-length) *scroll-units*) *line-type* 1  *current-color* *current-width*)
+	(add-circle 
+	 *current-layer*
+	 (/ *x* *scroll-units*) 
+	 (/ *y* *scroll-units*) 
+	 0
+	 (/ (get-coord-length) *scroll-units*) 
+	 *line-type* 
+	 1  
+	 *current-color* 
+	 *current-width*)
 	(setf *x* 0 *y* 0)
 	(setf *end* 0))))
 
@@ -145,7 +178,16 @@
   (stroke)
   (if (equal *end* 2)
       (progn
-	(add-circle "0" (/ (* 0.5 (+ *current-x* *x*)) *scroll-units*) (/ (* 0.5 (+ *current-y* *y*)) *scroll-units*) 0 (/ (* 0.5 (get-coord-length)) *scroll-units*) *line-type* 1  *current-color* *current-width*)
+	(add-circle 
+	 *current-layer*
+	 (/ (* 0.5 (+ *current-x* *x*)) *scroll-units*) 
+	 (/ (* 0.5 (+ *current-y* *y*)) *scroll-units*) 
+	 0 
+	 (/ (* 0.5 (get-coord-length)) *scroll-units*) 
+	 *line-type* 
+	 1  
+	 *current-color* 
+	 *current-width*)
 	(setf *x* 0 *y* 0)
 	(setf *end* 0))))
 
@@ -165,7 +207,7 @@
 	   *current-y*
 	   *y*)
        (if (equal *end* 0)
-	   0
+	   1
 	   *length*)
        (if (equal *end* 1)
 	   0
@@ -174,9 +216,37 @@
 	   (deg-to-rad *angle2*)
 	   (* 2 pi)))
   (stroke)
+  ;shadow
+  (set-source-rgb 1 0 0)
+  (move-to (+ *x* 5) *y*)
+  (line-to (- *x* 5) *y*)
+  (move-to *x* (+ *y* 5))
+  (line-to *x* (- *y* 5))
+  (stroke)
+  (set-fantom-color)
+  (move-to (if (equal *x* 0) 
+	       *current-x*
+	       *x*)
+	   (if (equal *y* 0) 
+	       *current-y*
+	       *y*))
+  (line-to *current-x* *current-y*)
+  (stroke)
+  ;write
   (if (equal *end* 3)
       (progn
-	(add-arc *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 *length* *angle1* *angle2* *line-type* 1  *current-color* *current-width*)
+	(add-arc 
+	 *current-layer* 
+	 (/ *x* *scroll-units*) 
+	 (/ *y* *scroll-units*) 
+	 0
+	 (/ *length* *scroll-units*)
+	 *angle1* 
+	 *angle2* 
+	 *line-type* 
+	 1  
+	 *current-color* 
+	 *current-width*)
 	(setf *x* 0 *y* 0)
 	(setf *end* 0)
 	(setf *angle1* 0 *angle2* 0 *length* 0))))
@@ -195,7 +265,14 @@
   (stroke)
   (if (equal *end* 2)
       (progn 
-       (add-continious *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0)
+       (add-continious 
+	*current-layer* 
+	(/ *x* *scroll-units*) 
+	(/ *y* *scroll-units*) 
+	0 
+	(/ *current-x* *scroll-units*) 
+	(/ *current-y* *scroll-units*) 
+	0)
        (setf *x* 0 *y* 0)
        (setf *end* 0))))
 
@@ -213,7 +290,14 @@
   (stroke)
   (if (equal *end* 2)
       (progn 
-       (add-ray *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0)
+       (add-ray 
+	*current-layer* 
+	(/ *x* *scroll-units*) 
+	(/ *y* *scroll-units*) 
+	0 
+	(/ *current-x* *scroll-units*)
+	(/ *current-y* *scroll-units*)
+	0)
        (setf *x* 0 *y* 0)
        (setf *end* 0))))
   
@@ -228,7 +312,12 @@
   (restore)
   (if (equal *end* 1)
       (progn 
-       (add-point *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 1)
+       (add-point 
+	*current-layer* 
+	(/ *x* *scroll-units*) 
+	(/ *y* *scroll-units*) 
+	0 
+	1)
        (setf *x* 0 *y* 0)
        (setf *end* 0))))
 
@@ -251,7 +340,18 @@
   (restore)
   (if (equal *end* 2)
       (progn 
-       (add-rectangle *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 (/ *current-x* *scroll-units*) (/ *current-y* *scroll-units*) 0 *line-type* 1 *current-color* *current-width*)
+       (add-rectangle 
+	*current-layer* 
+	(/ *x* *scroll-units*) 
+	(/ *y* *scroll-units*) 
+	0 
+	(/ *current-x* *scroll-units*) 
+	(/ *current-y* *scroll-units*) 
+	0 
+	*line-type*
+	1 
+	*current-color* 
+	*current-width*)
        (setf *x* 0 *y* 0)
        (setf *end* 0))))
 
@@ -269,7 +369,15 @@
       (if (equal *text-buffer-count* "")
 	  (setf *end* 0)
 	  (progn 
-	    (add-text *current-layer* (/ *x* *scroll-units*) (/ *y* *scroll-units*) 0 *text-buffer-count* *current-font* 0 *current-color*)
+	    (add-text 
+	     *current-layer* 
+	     (/ *x* *scroll-units*) 
+	     (/ *y* *scroll-units*)
+	     0 
+	     *text-buffer-count* 
+	     *current-font*
+	     0
+	     *current-color*)
 	    (setf *text-buffer-count* "" *x* 0 *y* 0 *end* 0)))))
 
 (defun input-for-raster-image ()
