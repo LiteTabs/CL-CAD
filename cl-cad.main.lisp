@@ -85,9 +85,13 @@
     (gtk:dialog-run dlg)
     (gtk:object-destroy dlg)))
 
+(defvar *draw-width* nil)
+(defvar *draw-height* nil)
+
 (defun cc-expose (widget)
   (multiple-value-bind (w h) (gdk:drawable-get-size (widget-window widget))
     (with-gdk-context (ctx (widget-window widget))
+      (setf *draw-width* w  *draw-height* h)
       (with-context (ctx)
         (screen-drawer w h)
         nil))))

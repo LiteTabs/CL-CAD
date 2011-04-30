@@ -273,8 +273,7 @@
 	(/ *current-x* *scroll-units*) 
 	(/ *current-y* *scroll-units*) 
 	0)
-       (setf *x* 0 *y* 0)
-       (setf *end* 0))))
+       (setf *x* 0 *y* 0 *end* 0))))
 
 (defun input-for-ray ()
   (set-source-rgb 1 0 0)
@@ -286,7 +285,32 @@
    (if (equal *y* 0) 
        *current-y*
        *y*))
-  (line-to *current-x* *current-y*)
+  (line-to
+   (if (equal *x* 0) 
+       *current-x*
+       (cond
+	 ((> *x* *current-x*)
+	  0)
+	 ((< *x* *current-x*)
+	  (max *draw-width* *draw-height*))
+	 ((= *x* *current-x*)
+	  *x*)))
+   (if (equal *y* 0) 
+       *current-y*
+       (cond
+	 ((> *x* *current-x*)
+	  (* -1 
+	     (/ (- (* *x* *current-y*) (* *current-x* *y*)) 
+		(- *current-x* *x*))))
+	 ((< *x* *current-x*)
+	  (* -1
+	     (/ (+ (* (max *draw-width* *draw-height*) (- *y* *current-y*))
+		   (- (* *x* *current-y*) (* *current-x* *y*))) 
+		(- *current-x* *x*))))
+	 ((= *x* *current-x*)
+	  (if (> *y* *current-y*)
+	      0
+	      *draw-height*)))))
   (stroke)
   (if (equal *end* 2)
       (progn 
@@ -300,7 +324,6 @@
 	0)
        (setf *x* 0 *y* 0)
        (setf *end* 0))))
-  
 
 (defun input-for-point ()
   (set-source-rgb 1 0 0)

@@ -28,7 +28,7 @@
 (defun load-config ()
   (with-open-stream (stream (open (config-path)
 				  :direction :input
-				  :if-does-not-exist :nil))
+				  :if-does-not-exist nil))
     (setf *config*
 	  (if stream
 	      (read stream)
